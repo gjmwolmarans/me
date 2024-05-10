@@ -15,7 +15,7 @@ jobs:
           dotnet publish ./me/me.csproj -c Release -o publish
           echo 'wwwroot' > publish/.nojekyll
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+        uses: JamesIves/github-pages-deploy-action@v4.6.0
         with:
           branch: gh-pages
           folder: publish/wwwroot
