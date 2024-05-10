@@ -9,7 +9,7 @@ jobs:
     steps:
       
       - name: Checkout code
-        uses: actions/checkout@4
+        uses: actions/checkout@v4.1.5
       - name: Build and deploy
         run: |
           dotnet publish -c Release -o publish
