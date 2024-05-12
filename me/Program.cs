@@ -18,7 +18,7 @@ builder.Services.AddSingleton<MeDbContext>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IExcelFileService, ExcelFileService>();
+builder.Services.AddSingleton(sp => new ExcelFileService());
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddSyncfusionBlazor();
