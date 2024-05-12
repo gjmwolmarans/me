@@ -9,10 +9,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*-*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*-*" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
 	  <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
 	  <PackageReference Include="Syncfusion.Blazor.Core" Version="25.2.3" />
     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="25.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Competency Matrix.xlsx">
+      <LogicalName>me.Resources.CompetencyMatrix.xlsx</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

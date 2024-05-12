@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@inject IExcelFileService ExcelFileService
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +12,18 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await ExcelFileService.GetProvidersAsync();
+            await ExcelFileService.GetResourcesAsync();
+            await ExcelFileService.GetTagsAsync();
+            await ExcelFileService.GetResourceTagsAsync();
+        }       
+    }
+}
