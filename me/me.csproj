@@ -16,4 +16,8 @@
     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="25.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\me.shared\me.shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using me.shared
 
 @inject IExcelFileService ExcelFileService
 
@@ -12,6 +13,7 @@
 
 @code {
     ICollection<Resource> Resources { get; set; } = new List<Resource>();
+    Data Data { get; set; } 
 
     protected async override Task OnInitializedAsync()
     {
@@ -22,8 +24,8 @@
     {
         if (firstRender)
         {
-            Resources = await ExcelFileService.GetResourcesAsync();
-            Console.WriteLine(Resources.Count);
+            Data = await ExcelFileService.LoadData();
+            Console.WriteLine(Data.Resources.ToList().Count);
         }
     }
 }
