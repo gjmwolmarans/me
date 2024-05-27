@@ -1,6 +1,7 @@
 ﻿using me.console.Contracts;
 using Syncfusion.XlsIO;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 
 namespace me.console.Services;
 
@@ -15,9 +16,9 @@ public class ExcelFileService : IExcelFileService, IDisposable
     ExcelEngine ExcelEngine { get; set; }
     IWorkbook Workbook { get; set; }
 
-    public ExcelFileService()
+    public ExcelFileService(string path)
     {
-        LoadWorkbook();
+        LoadWorkbook(path);
         LoadTables();
     }
 
@@ -29,16 +30,14 @@ public class ExcelFileService : IExcelFileService, IDisposable
         GetResourceTags();
     }
 
-    private void LoadWorkbook()
+    private void LoadWorkbook(string path)
     {
         ExcelEngine = new ExcelEngine();
 
         var application = ExcelEngine.Excel;
         application.DefaultVersion = ExcelVersion.Excel2016;
 
-        Stream = Assembly
-                .GetExecutingAssembly()
-                .GetManifestResourceStream("me.Resources.CompetencyMatrix.xlsx")!;
+        Stream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
         Workbook = application.Workbooks.Open(Stream, ExcelOpenType.Automatic);
     }
@@ -67,7 +66,7 @@ public class ExcelFileService : IExcelFileService, IDisposable
         {
             Resources.AddRange(
                 LoadTable("Resources", rowCells => {
-                    var resource = new Resource
+                    return new Resource
                     {
                         Id = int.Parse(rowCells[0].DisplayText),
                         Title = rowCells[1].DisplayText,
@@ -77,10 +76,6 @@ public class ExcelFileService : IExcelFileService, IDisposable
                         Duration = TimeSpan.Parse(rowCells[5].DisplayText),
                         Url = rowCells[7].DisplayText
                     };
-
-                    resource.Provider = Providers.FirstOrDefault(p => p.Id == resource.ProviderId);
-
-                    return resource;
                 })
             );
 

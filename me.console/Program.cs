@@ -2,18 +2,25 @@
 using Microsoft.Extensions.Hosting;
 using me.console.Contracts;
 using me.console.Services;
+using System.Text.Json;
+using me.shared;
+
+string _competencyMatrixPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CompetencyMatrix.xlsx");
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddSingleton<IExcelFileService, ExcelFileService>();
+builder.Services.AddSingleton<IExcelFileService, ExcelFileService>(provider =>
+{
+    DownloadCompetencyMatrix(_competencyMatrixPath).Wait();
+
+    return new ExcelFileService(_competencyMatrixPath);
+});
 
 using IHost host = builder.Build();
 
-RunPipeline(host.Services);
+await RunPipeline(host.Services);
 
-await host.RunAsync();
-
-static void RunPipeline(IServiceProvider hostProvider)
+static async Task RunPipeline(IServiceProvider hostProvider)
 {
     using IServiceScope serviceScope = hostProvider.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
@@ -21,15 +28,48 @@ static void RunPipeline(IServiceProvider hostProvider)
 
     Console.WriteLine("...");
 
+    var providers = excelFileService.GetProviders();
     var resources = excelFileService.GetResources();
+    var tags = excelFileService.GetTags();
+    var resourceTags = excelFileService.GetResourceTags();
 
-    var resourcesByProvider = resources.GroupBy(r => r.Provider)
-        .OrderByDescending(kv => kv.Sum(v => v.Experience));
+    var data = new Data {
+        Providers = providers,
+        Resources = resources,
+        Tags = tags,
+        ResourceTags = resourceTags
+    };
 
-    foreach (var group in resourcesByProvider)
-    {
-        Console.WriteLine($"{group.Key.Title} ({group.Count()}) {group.Sum(r => r.Duration.TotalHours)} {group.Sum(r => r.Experience)}");
-    }
+    await ExportToJson(data, Path.Combine("../me/wwwroot/data/", $"{nameof(data)}.json"));
+
+
+    Console.WriteLine("Done Exporting Resources to JSON...");
 
     Console.WriteLine();
+}
+
+
+static async Task DownloadCompetencyMatrix(string path)
+{
+    var url = new Uri("https://onedrive.live.com/download.aspx?resid=F9480B74B852B3B7!251307&ithint=file,xlsx&authkey=!ABBznQ1L9IJP6BQ");
+
+    using HttpClient client = new HttpClient();
+
+    using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+
+    using var stream = await response.Content.ReadAsStreamAsync();
+
+    using var fileStream = File.Create(path);
+
+    await stream.CopyToAsync(fileStream);
+}
+
+
+
+static async Task ExportToJson<T>(T data, string path)
+{
+    string json = JsonSerializer.Serialize(data, new JsonSerializerOptions {
+        WriteIndented = false
+    });
+    await File.WriteAllTextAsync(path, json);
 }
