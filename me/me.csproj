@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>1af290ef-d936-4fd9-93e5-3cb8cbe3bb18</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +12,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*-*" PrivateAssets="all" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
 	  <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
-	  <PackageReference Include="Syncfusion.Blazor.Core" Version="25.2.3" />
-    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="25.2.3" />
+	  <PackageReference Include="Syncfusion.Blazor" Version="26.2.4" />
+	  <PackageReference Include="Syncfusion.Blazor.Themes" Version="26.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\me.shared\me.shared.csproj" />
   </ItemGroup>
 
 </Project>
