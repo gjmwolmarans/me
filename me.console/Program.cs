@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using me.console.Contracts;
 using me.console.Services;
 using System.Text.Json;
 using me.shared;
+using me.shared.Converters;
 
 string _competencyMatrixPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CompetencyMatrix.xlsx");
 
@@ -69,7 +70,11 @@ static async Task DownloadCompetencyMatrix(string path)
 static async Task ExportToJson<T>(T data, string path)
 {
     string json = JsonSerializer.Serialize(data, new JsonSerializerOptions {
-        WriteIndented = false
+        WriteIndented = false,
+        Converters =
+        {
+            new TimeSpanJsonConverter()
+        }
     });
     await File.WriteAllTextAsync(path, json);
 }

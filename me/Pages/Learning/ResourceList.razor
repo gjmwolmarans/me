@@ -1,0 +1,69 @@
+﻿@using System.Collections.ObjectModel
+@using System.Text
+@using me.shared
+@using Syncfusion.Blazor.Grids
+
+@inject IExcelFileService Data;
+
+<h1>Resources</h1>
+
+@if (Resources != null)
+{
+    <SfGrid DataSource=Resources AllowPaging=true >
+        <GridPageSettings PageSize=50></GridPageSettings>
+        <GridColumns>
+            <GridColumn Field="@nameof(Resource.Id)" HeaderText="ID" TextAlign=TextAlign.Right Width=48 AllowSorting=true />
+            <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title" AllowSorting=true >
+                <Template>
+                    @{
+                        var resource = context as Resource;
+                        @if (resource.Url.StartsWith("http"))
+                        {
+                            <a href="@resource.Url" target="_blank">@resource.Title</a>
+                        }
+                        else
+                        {
+                            <span>@resource.Title</span>
+                        }
+                    }
+                </Template>
+            </GridColumn>
+            <GridColumn Field="@nameof(Resource.Type)" HeaderText="Type" />
+            <GridColumn Field="@nameof(Resource.Experience)" HeaderText="Experience" Type=ColumnType.Double Format="N2" AllowSorting=true />
+            <GridColumn Field="@nameof(Resource.Duration)" HeaderText="Duration" AllowSorting=true>
+                <Template>
+                    @{
+                        var resource = context as Resource;
+                        <span>@GetDurationString(resource.Duration)</span>
+                    }
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+}
+
+@code {
+    [Parameter] public ICollection<Resource> Resources { get; set; } = new List<Resource>();
+    [Parameter] public EventCallback<ICollection<Resource>> ResourcesChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Resources = await Data.GetResourcesAsync();
+    }
+
+    private string GetDurationString(TimeSpan duration)
+    {
+        var stringBuilder = new StringBuilder();
+
+        if (duration.TotalHours >= 1)
+        {
+            stringBuilder.Append($"{((int)duration.TotalHours)}h ");
+        }
+        if (duration.Minutes > 0)
+        {
+            stringBuilder.Append($"{duration.Minutes}m");
+        }
+
+        return stringBuilder.ToString();
+    }
+}

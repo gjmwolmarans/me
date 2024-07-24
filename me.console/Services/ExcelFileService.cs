@@ -1,5 +1,6 @@
 ﻿using me.console.Contracts;
 using Syncfusion.XlsIO;
+using System.Globalization;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
@@ -66,6 +67,13 @@ public class ExcelFileService : IExcelFileService, IDisposable
         {
             Resources.AddRange(
                 LoadTable("Resources", rowCells => {
+
+                    var durationSplit = rowCells[5].DisplayText.Split(':');
+                    var durationTotalHours = TimeSpan.FromHours(double.Parse(durationSplit[0]));
+                    var durationDays = TimeSpan.FromDays(durationTotalHours.Days);
+                    var durationHours = TimeSpan.FromHours(durationTotalHours.Hours);
+                    var durationMinutes = TimeSpan.FromMinutes(double.Parse(durationSplit[1]));
+
                     return new Resource
                     {
                         Id = int.Parse(rowCells[0].DisplayText),
@@ -73,7 +81,7 @@ public class ExcelFileService : IExcelFileService, IDisposable
                         ProviderId = rowCells[2].DisplayText,
                         Type = rowCells[3].DisplayText,
                         Level = int.Parse(rowCells[4].DisplayText),
-                        Duration = TimeSpan.Parse(rowCells[5].DisplayText),
+                        Duration = durationDays + durationHours + durationMinutes,
                         Url = rowCells[7].DisplayText
                     };
                 })

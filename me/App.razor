@@ -20,10 +20,7 @@
 
         if (firstRender)
         {
-            await ExcelFileService.GetProvidersAsync();
-            await ExcelFileService.GetResourcesAsync();
-            await ExcelFileService.GetTagsAsync();
-            await ExcelFileService.GetResourceTagsAsync();
+            await ExcelFileService.LoadData();
         }       
     }
 }

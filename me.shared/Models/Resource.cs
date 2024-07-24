@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using me.shared.Converters;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace me;
@@ -10,6 +11,7 @@ public class Resource
     public string ProviderId { get; set; }
     public string Type { get; set; }
     public int Level { get; set; }
+    [JsonConverter(typeof(TimeSpanJsonConverter))]
     public TimeSpan Duration { get; set; }
     public string Url { get; set; }
     [NotMapped]
