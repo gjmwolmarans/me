@@ -9,11 +9,12 @@
 
 @if (Resources != null)
 {
-    <SfGrid DataSource=Resources AllowPaging=true >
+    <SfGrid DataSource=Resources AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
         <GridPageSettings PageSize=50></GridPageSettings>
         <GridColumns>
-            <GridColumn Field="@nameof(Resource.Id)" HeaderText="ID" TextAlign=TextAlign.Right Width=48 AllowSorting=true />
-            <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title" AllowSorting=true >
+            <GridColumn Field="@nameof(Resource.Id)" IsPrimaryKey=true HeaderText="ID" TextAlign=TextAlign.Right Width=72 />
+            <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title">
                 <Template>
                     @{
                         var resource = context as Resource;
@@ -29,8 +30,8 @@
                 </Template>
             </GridColumn>
             <GridColumn Field="@nameof(Resource.Type)" HeaderText="Type" />
-            <GridColumn Field="@nameof(Resource.Experience)" HeaderText="Experience" Type=ColumnType.Double Format="N2" AllowSorting=true />
-            <GridColumn Field="@nameof(Resource.Duration)" HeaderText="Duration" AllowSorting=true>
+            <GridColumn Field="@nameof(Resource.Experience)" HeaderText="Experience" Type=ColumnType.Double Format="N2" />
+            <GridColumn Field="@nameof(Resource.Duration)" HeaderText="Duration">
                 <Template>
                     @{
                         var resource = context as Resource;

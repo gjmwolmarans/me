@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*-*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*-*" PrivateAssets="all" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.6.0" />
 	  <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
 	  <PackageReference Include="Syncfusion.Blazor" Version="26.2.4" />
 	  <PackageReference Include="Syncfusion.Blazor.Themes" Version="26.2.4" />
@@ -18,6 +19,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\me.shared\me.shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\" />
+    <Folder Include="Components\Resource\" />
   </ItemGroup>
 
 </Project>
