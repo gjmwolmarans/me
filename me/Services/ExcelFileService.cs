@@ -24,6 +24,18 @@ public class ExcelFileService : IExcelFileService
             {
                 Converters = { new TimeSpanJsonConverter() }
             });
+
+            foreach (var resourceTag in Data.ResourceTags)
+            {
+                resourceTag.Resource = Data.Resources.FirstOrDefault(r => r.Id == resourceTag.ResourceId);
+                resourceTag.Tag = Data.Tags.FirstOrDefault(t => t.Id == resourceTag.TagId);
+            }
+
+            foreach (var resource in Data.Resources)
+            {
+                resource.Provider = Data.Providers.FirstOrDefault(p => p.Id == resource.ProviderId);
+                resource.ResourceTags = Data.ResourceTags.Where(rt => rt.ResourceId == resource.Id).ToList();
+            }
         }
 
         return Data;

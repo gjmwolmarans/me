@@ -9,36 +9,76 @@
 
 @if (Resources != null)
 {
-    <SfGrid DataSource=Resources AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true>
-        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+    <SfGrid DataSource="@Resources.AsQueryable()" AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true >
+        <GridFilterSettings>
+            <GridFilterColumns>
+                <GridFilterColumn Field="Provider.Title" Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@ProviderTitleValue" />
+                <GridFilterColumn Field=@nameof(Resource.Title) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TitleValue" />
+                <GridFilterColumn Field=@nameof(Resource.Type) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TypeValue" />
+            </GridFilterColumns>
+        </GridFilterSettings>
+        <GridSortSettings>
+            <GridSortColumns>
+                <GridSortColumn Field=@nameof(Resource.Id) Direction="@Syncfusion.Blazor.Grids.SortDirection.Descending" />
+            </GridSortColumns>
+        </GridSortSettings>
         <GridPageSettings PageSize=50></GridPageSettings>
+        <GridTemplates>
+            <RowTemplate>
+                @{
+                    var resource = (context as Resource)!;
+                    <td colspan="7" style="width: 100%;">
+                        <FluentGrid Style="padding: 0.5rem; width: auto;" Justify="@JustifyContent.FlexStart">
+                            <FluentGridItem xs="4" sm="3" lg="2" Justify="@JustifyContent.Center">
+                                <FluentPersona Initials="@resource.ProviderId" ImageSize="96px"/>
+                            </FluentGridItem>
+                            <FluentGridItem xs="8" sm="9" lg="10">
+                                <FluentStack Orientation="Orientation.Vertical">
+                                    <FluentStack Orientation="Orientation.Horizontal">
+                                        <h2>@resource.Provider.Title | @resource.Title @if (resource.Url.StartsWith("http")) { 
+                                            
+                                            <a href="@resource.Url" target="_blank">
+                                                <FluentIcon Value="@(new Icons.Regular.Size48.Link())" />
+                                            </a>
+                                        }</h2>
+                                    </FluentStack>
+                                    <FluentStack Orientation="Orientation.Horizontal">
+                                        <FluentBadge Appearance="Appearance.Accent">
+                                            @resource.Experience.ToString("N2") xp
+                                        </FluentBadge>
+                                        <FluentBadge Appearance="Appearance.Accent">
+                                            @GetLevelString(resource.Level)
+                                        </FluentBadge>
+                                        <FluentBadge Appearance="Appearance.Accent">
+                                            @GetDurationString(resource.Duration)
+                                        </FluentBadge>
+                                        <FluentBadge Appearance="Appearance.Accent">
+                                            @resource.Type
+                                        </FluentBadge>
+                                    </FluentStack>
+                                    <FluentStack Orientation="Orientation.Horizontal">
+                                        @foreach (var resourceTag in resource.ResourceTags)
+                                        {
+                                            <FluentBadge>
+                                                @resourceTag.Tag.Title
+                                            </FluentBadge>
+                                        }
+                                    </FluentStack>
+                                </FluentStack>
+                            </FluentGridItem>
+                        </FluentGrid>
+                    </td>
+                }
+            </RowTemplate>
+        </GridTemplates>
         <GridColumns>
-            <GridColumn Field="@nameof(Resource.Id)" IsPrimaryKey=true HeaderText="ID" TextAlign=TextAlign.Right Width=72 />
-            <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title">
-                <Template>
-                    @{
-                        var resource = context as Resource;
-                        @if (resource.Url.StartsWith("http"))
-                        {
-                            <a href="@resource.Url" target="_blank">@resource.Title</a>
-                        }
-                        else
-                        {
-                            <span>@resource.Title</span>
-                        }
-                    }
-                </Template>
-            </GridColumn>
+            <GridColumn Field="@nameof(Resource.Id)" AllowFiltering=false IsPrimaryKey=true HeaderText="ID" TextAlign=TextAlign.Right Width=72 />
+            <GridColumn Field="Provider.Title" HeaderText="Provider" />
+            <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title" />
             <GridColumn Field="@nameof(Resource.Type)" HeaderText="Type" />
-            <GridColumn Field="@nameof(Resource.Experience)" HeaderText="Experience" Type=ColumnType.Double Format="N2" />
-            <GridColumn Field="@nameof(Resource.Duration)" HeaderText="Duration">
-                <Template>
-                    @{
-                        var resource = context as Resource;
-                        <span>@GetDurationString(resource.Duration)</span>
-                    }
-                </Template>
-            </GridColumn>
+            <GridColumn Field="@nameof(Resource.Experience)" AllowFiltering=false HeaderText="Experience" Type=ColumnType.Double Format="N2" />
+            <GridColumn Field="@nameof(Resource.Level)" AllowFiltering=false HeaderText="Level" Type=ColumnType.Integer />
+            <GridColumn Field="@nameof(Resource.Duration)" AllowFiltering=false HeaderText="Duration" />
         </GridColumns>
     </SfGrid>
 }
@@ -46,6 +86,10 @@
 @code {
     [Parameter] public ICollection<Resource> Resources { get; set; } = new List<Resource>();
     [Parameter] public EventCallback<ICollection<Resource>> ResourcesChanged { get; set; }
+
+    public string ProviderTitleValue = string.Empty;
+    public string TitleValue = string.Empty;
+    public string TypeValue = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,5 +110,25 @@
         }
 
         return stringBuilder.ToString();
+    }
+
+    private string GetLevelString(int level)
+    {
+        if (level == 100)
+        {
+            return "Beginner";
+        }
+        else if (level == 200)
+        {
+            return "Intermediate";
+        }
+        else if (level == 300)
+        {
+            return "Advanced";
+        }
+        else
+        {
+            return "Unknown";
+        }
     }
 }
