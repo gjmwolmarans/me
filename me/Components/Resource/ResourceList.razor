@@ -12,7 +12,7 @@
     <SfGrid DataSource="@Resources.AsQueryable()" AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true >
         <GridFilterSettings>
             <GridFilterColumns>
-                <GridFilterColumn Field="Provider.Title" Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@ProviderTitleValue" />
+                <GridFilterColumn Field="@(nameof(Resource.Provider) + "." + nameof(Provider.Title))" Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@ProviderTitleValue" />
                 <GridFilterColumn Field=@nameof(Resource.Title) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TitleValue" />
                 <GridFilterColumn Field=@nameof(Resource.Type) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TypeValue" />
             </GridFilterColumns>
@@ -73,7 +73,7 @@
         </GridTemplates>
         <GridColumns>
             <GridColumn Field="@nameof(Resource.Id)" AllowFiltering=false IsPrimaryKey=true HeaderText="ID" TextAlign=TextAlign.Right Width=72 />
-            <GridColumn Field="Provider.Title" HeaderText="Provider" />
+            <GridColumn Field="@(nameof(Resource.Provider) + "." + nameof(Provider.Title))" HeaderText="Provider" />
             <GridColumn Field="@nameof(Resource.Title)" HeaderText="Title" />
             <GridColumn Field="@nameof(Resource.Type)" HeaderText="Type" />
             <GridColumn Field="@nameof(Resource.Experience)" AllowFiltering=false HeaderText="Experience" Type=ColumnType.Double Format="N2" />
@@ -114,21 +114,16 @@
 
     private string GetLevelString(int level)
     {
-        if (level == 100)
+        switch (level) 
         {
-            return "Beginner";
-        }
-        else if (level == 200)
-        {
-            return "Intermediate";
-        }
-        else if (level == 300)
-        {
-            return "Advanced";
-        }
-        else
-        {
-            return "Unknown";
+            case 100:
+                return "Beginner";
+            case 200:
+                return "Intermediate";
+            case 300:
+                return "Advanced";
+            default:
+                return "Unknown";
         }
     }
 }
