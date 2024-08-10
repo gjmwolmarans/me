@@ -9,12 +9,21 @@
 
 @if (Resources != null)
 {
-    <SfGrid DataSource="@Resources.AsQueryable()" AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true >
+    <SfGrid DataSource="@Resources" AllowPaging=true AllowSorting=true AllowMultiSorting=true AllowFiltering=true >
         <GridFilterSettings>
             <GridFilterColumns>
-                <GridFilterColumn Field="@(nameof(Resource.Provider) + "." + nameof(Provider.Title))" Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@ProviderTitleValue" />
-                <GridFilterColumn Field=@nameof(Resource.Title) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TitleValue" />
-                <GridFilterColumn Field=@nameof(Resource.Type) Operator="Syncfusion.Blazor.Operator.Contains" Predicate="and" Value="@TypeValue" />
+                <GridFilterColumn Field="@(nameof(Resource.Provider) + "." + nameof(Provider.Title))" 
+                                  Operator="Syncfusion.Blazor.Operator.Contains"
+                                  Predicate="and"
+                                  Value="@ProviderTitleValue" />
+                <GridFilterColumn Field=@nameof(Resource.Title)
+                                  Operator="Syncfusion.Blazor.Operator.Contains"
+                                  Predicate="and"
+                                  Value="@TitleValue" />
+                <GridFilterColumn Field=@nameof(Resource.Type)
+                                  Operator="Syncfusion.Blazor.Operator.Contains"
+                                  Predicate="and"
+                                  Value="@TypeValue" />
             </GridFilterColumns>
         </GridFilterSettings>
         <GridSortSettings>
@@ -22,7 +31,7 @@
                 <GridSortColumn Field=@nameof(Resource.Id) Direction="@Syncfusion.Blazor.Grids.SortDirection.Descending" />
             </GridSortColumns>
         </GridSortSettings>
-        <GridPageSettings PageSize=50></GridPageSettings>
+        <GridPageSettings PageSize="10"></GridPageSettings>
         <GridTemplates>
             <RowTemplate>
                 @{
@@ -38,7 +47,7 @@
                                         <h2>@resource.Provider.Title | @resource.Title @if (resource.Url.StartsWith("http")) { 
                                             
                                             <a href="@resource.Url" target="_blank">
-                                                <FluentIcon Value="@(new Icons.Regular.Size48.Link())" />
+                                                <FluentIcon Value="@(new Icons.Regular.Size28.Link())" />
                                             </a>
                                         }</h2>
                                     </FluentStack>
