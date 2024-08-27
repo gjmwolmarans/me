@@ -10,4 +10,6 @@ public class ResourceTag
     public virtual Resource Resource { get; set; }
     [JsonIgnore]
     public virtual Tag Tag { get; set; }
+    [JsonIgnore]
+    public double WeightedExperience => Resource.Experience / Resource.ResourceTags.Where(rt => rt.Tag.Type == Tag.Type).Count();
 }
