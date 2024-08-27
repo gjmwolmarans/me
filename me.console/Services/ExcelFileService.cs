@@ -103,7 +103,7 @@ public class ExcelFileService : IExcelFileService, IDisposable
                         Id = int.Parse(rowCells[0].DisplayText),
                         Title = rowCells[1].DisplayText,
                         Type = rowCells[2].DisplayText,
-                        Role = rowCells[3].DisplayText
+                        RoleId = rowCells[3].DisplayText
                     };
                 })
             );

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace me;
-
 public class Resource
 {
     public int Id { get; set; }

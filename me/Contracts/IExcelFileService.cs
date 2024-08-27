@@ -9,4 +9,5 @@ public interface IExcelFileService
     Task<ICollection<Resource>> GetResourcesAsync();
     Task<ICollection<Tag>> GetTagsAsync();
     Task<ICollection<ResourceTag>> GetResourceTagsAsync();
+    Task<ICollection<Role>> GetRolesAsync();
 }

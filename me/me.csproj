@@ -22,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
     <Folder Include="Components\Resource\" />
+    <Folder Include="Components\Role\NewFolder\" />
+    <Folder Include="Pages\NewFolder\" />
   </ItemGroup>
 
 </Project>

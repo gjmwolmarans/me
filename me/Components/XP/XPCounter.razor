@@ -1,0 +1,33 @@
+﻿@using Syncfusion.Blazor.Cards
+
+<SfCard>
+    <CardContent>
+        <div class="card-value">
+            @TotalXP.ToString("N2")
+        </div>
+        <span>Experience Points</span>
+    </CardContent>
+</SfCard>
+
+@code {
+    [Parameter] public double TotalXP { get; set; } = 0;
+}
+
+<style>
+    .card-value {
+        margin-top: 10px;
+        font-family: verdana, "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif";
+        font-size: 48px;
+        font-weight: 400;
+        text-align: center;
+    }
+
+    .card-text {
+        font-family: verdana, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-size: 13px;
+        color: #6f6f6f !important;
+        display: block;
+        text-align: center;
+        padding: 4px 0;
+    }
+</style>
