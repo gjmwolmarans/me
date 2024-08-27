@@ -11,5 +11,13 @@ public class ResourceTag
     [JsonIgnore]
     public virtual Tag Tag { get; set; }
     [JsonIgnore]
-    public double WeightedExperience => Resource.Experience / Resource.ResourceTags.Where(rt => rt.Tag.Type == Tag.Type).Count();
+    public double WeightedExperience
+    {
+        get
+        {
+            var resourceTagTypes = Resource.ResourceTags.Select(rt => rt.Tag.Type).Distinct();
+            var taggedResourceTags = Resource.ResourceTags.Where(rt => rt.Tag.Type == Tag.Type);
+            return Resource.Experience / resourceTagTypes.Count() / taggedResourceTags.Count();
+        }
+    }
 }
