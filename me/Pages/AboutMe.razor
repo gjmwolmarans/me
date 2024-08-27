@@ -19,22 +19,24 @@
 </div>
 
 <FluentGrid>
-    <FluentGridItem md="12" lg="3">
-        <XPCounter TotalXP="@(Data.Tags.Any(t => t.IsHighlighted) ?
-                Data.Tags.Where(t => t.IsHighlighted).Sum(t => t.WeightedExperience) :
+    <FluentGridItem sm="12" md="12" lg="3">
+        <XPCounter TotalXP="@(Data.Tags.Any(t => t.IsHighlighted) || Data.ResourceTypes.Any(rt => rt.IsSelected) ?
+                FilteredResources.SelectMany(r => r.ResourceTags).Sum(t => t.WeightedExperience) :
                 TotalXP)" />
-        <SfSpinner @bind-Visible="@_isLoading" />
     </FluentGridItem>
-    <FluentGridItem md="12" lg="9">
+    <FluentGridItem sm="12" md="12" lg="9">
         <RoleList @bind-Items="@Data.Roles" />
     </FluentGridItem>
-    <FluentGridItem md="12">
+    <FluentGridItem sm="12" md="12" lg="12">
         <TagList @bind-Items="@Data.Tags" @bind-IsLoading="@_isLoading" />
     </FluentGridItem>
-    <FluentGridItem md="12">
+    <FluentGridItem sm="12" md="12" lg="12">
+        <ResourceTypeList @bind-Items="@Data.ResourceTypes" />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
         <ResourceList Items="@FilteredResources" />
     </FluentGridItem>
-    
+    <SfSpinner @bind-Visible="@_isLoading" />
 </FluentGrid>
 
 @code {
@@ -55,12 +57,20 @@
         }
     }
 
-    IEnumerable<Resource> FilteredResources =>
-        Data.Tags.Any(t => t.IsHighlighted) ?
-            Data.Resources.Where(r => r.ResourceTags
-                .Select(r => r.Tag)
-                .Any(t => t.IsHighlighted)) :
-            Data.Resources;
+    IEnumerable<Resource> FilteredResources
+    {
+        get
+        {
+            var anyTags = Data.Tags.Any(t => t.IsHighlighted);
+            var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
+            return anyTags || anyResourceTypes
+                ? Data.Resources.Where(r =>
+                (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+                && (!anyResourceTypes || Data.ResourceTypes.First(rt => rt.Title == r.Type).IsHighlighted))
+                : Data.Resources;
+        }
+    }
+
 
     protected async override Task OnInitializedAsync()
     {

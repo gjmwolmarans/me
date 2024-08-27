@@ -10,4 +10,6 @@ public class Data
     public IEnumerable<ResourceTag> ResourceTags { get; set; } = Enumerable.Empty<ResourceTag>().ToList();
     [JsonIgnore]
     public IEnumerable<Role> Roles { get; set; } = Enumerable.Empty<Role>().ToList();
+    [JsonIgnore]
+    public IEnumerable<ResourceType> ResourceTypes { get; set; } = Enumerable.Empty<ResourceType>().ToList();
 }

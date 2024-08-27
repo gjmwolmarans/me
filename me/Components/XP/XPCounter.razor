@@ -1,13 +1,15 @@
 ﻿@using Syncfusion.Blazor.Cards
 
-<SfCard>
-    <CardContent>
-        <div class="card-value">
-            @TotalXP.ToString("N2")
-        </div>
-        <span>Experience Points</span>
-    </CardContent>
-</SfCard>
+<div style="width: 100%;">
+    <SfCard>
+        <CardContent>
+            <div class="card-value">
+                @TotalXP.ToString("N2")
+            </div>
+            <span>Experience Points</span>
+        </CardContent>
+    </SfCard>
+</div>
 
 @code {
     [Parameter] public double TotalXP { get; set; } = 0;

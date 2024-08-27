@@ -1,0 +1,59 @@
+﻿@using me.shared
+@using Syncfusion.Blazor.Buttons
+
+@inject IExcelFileService Data
+
+@if (Items.Any())
+{
+    <h3>
+        Resource Types @if (Items.Any(r => r.IsSelected))
+        {
+            <FluentIcon OnClick="ClearSelection" Value="@(new Icons.Regular.Size24.FilterDismiss())" />
+        }
+    </h3>
+    <SfChip @ref="_chip" Selection="SelectionType.Multiple">
+        <ChipEvents OnClick="@OnClick"></ChipEvents>
+        <ChipItems>
+            @foreach (var resourceType in Items.OrderByDescending(rt => rt.Resources.SelectMany(r => r.ResourceTags).Sum(rt => rt.WeightedExperience)))
+            {
+                <ChipItem Text="@resourceType.Title" CssClass="@(resourceType.IsHighlighted ? "e-primary" : "")"></ChipItem>
+            }
+        </ChipItems>
+    </SfChip>
+}
+
+@code {
+    [Parameter] public IEnumerable<ResourceType> Items { get; set; } = Enumerable.Empty<ResourceType>();
+    [Parameter] public EventCallback<IEnumerable<ResourceType>> ItemsChanged { get; set; }
+
+    public SfChip? _chip { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnClick(ChipEventArgs args)
+    {
+        var role = Items.FirstOrDefault(r => r.Title == args.Text);
+
+        if (role != null)
+        {
+            role.IsSelected = !role.IsSelected;
+            await ItemsChanged.InvokeAsync(Items);
+            ResetSelection();
+        }
+    }
+
+    public void ResetSelection()
+    {
+        _chip?.SelectChips(Items.Where(r => r.IsSelected).Select(r => r.Title).ToArray());
+    }
+
+    public async Task ClearSelection()
+    {
+        _chip.SelectedChips = Enumerable.Empty<string>().ToArray();
+        Items.Where(r => r.IsSelected).ToList().ForEach(r => r.IsSelected = false);
+        await ItemsChanged.InvokeAsync(Items);
+    }
+}
