@@ -33,6 +33,12 @@ public class ExcelFileService : IExcelFileService
                 resourceTag.Tag = Data.Tags.FirstOrDefault(t => t.Id == resourceTag.TagId);
             }
 
+            Data.ResourceTypes = Data.Resources.Select(r => r.Type).Distinct().Select(r => new ResourceType { Title = r }).ToList();
+            foreach (var resourceType in Data.ResourceTypes)
+            {
+                resourceType.Resources = Data.Resources.Where(r => r.Type == resourceType.Title).ToList();
+            }
+
             foreach (var resource in Data.Resources)
             {
                 resource.Provider = Data.Providers.FirstOrDefault(p => p.Id == resource.ProviderId);

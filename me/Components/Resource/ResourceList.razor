@@ -12,6 +12,7 @@
     <h3>Resources</h3>
     <SfListView DataSource="@Items.OrderByDescending(x => x.Id)"
         CssClass="e-list-template"
+        Width="95vw"
         SortOrder="Syncfusion.Blazor.Lists.SortOrder.Ascending">
         <ListViewFieldSettings TValue="Resource" Id="@nameof(Resource.Id)" Text="@nameof(Resource.Title)">
         </ListViewFieldSettings>
