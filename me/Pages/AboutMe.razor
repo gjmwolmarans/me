@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using System.Collections.ObjectModel
+@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Spinner
 
 @inject IExcelFileService ExcelFileService
@@ -19,10 +20,13 @@
 </div>
 
 <FluentGrid>
-    <FluentGridItem sm="12" md="12" lg="3">
+    <FluentGridItem sm="12" md="6" lg="3">
         <XPCounter TotalXP="@TotalXP" />
     </FluentGridItem>
-    <FluentGridItem sm="12" md="12" lg="9">
+    <FluentGridItem sm="12" md="6" lg="3">
+        <ChipHelp />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="6">
         <RoleList @bind-Items="@Data.Roles" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
@@ -32,7 +36,7 @@
         <ResourceTypeList @bind-Items="@Data.ResourceTypes" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
-        <ResourceList Items="@FilteredResources" />
+        <ResourceList Items="@FilteredResources.OrderByDescending(r => r.Id)" />
     </FluentGridItem>
     <SfSpinner @bind-Visible="@_isLoading" />
 </FluentGrid>
@@ -49,14 +53,15 @@
         {
             if (_totalXP == default)
             {
-                _totalXP = Data.Tags.Sum(t => t.WeightedExperience);
+                _totalXP = Data.ResourceTags.Sum(t => t.WeightedExperience);
             }
             var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
             var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
             return highlightedTags.Any() || selectedResourceTypes.Any()
-                ? FilteredResources.SelectMany(r => r.ResourceTags)
-                    .Where(rt => highlightedTags.Contains(rt.Tag) 
-                        || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.Type)))
+                ? FilteredResources
+                    .Where(r => !selectedResourceTypes.Any() || r.Type.IsSelected)
+                    .SelectMany(r => r.ResourceTags)
+                    .Where(rt => highlightedTags.Contains(rt.Tag))
                     .Sum(t => t.WeightedExperience)
                 : _totalXP;
         }
@@ -70,7 +75,7 @@
             var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
             return anyTags || anyResourceTypes
                 ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
-                && (!anyResourceTypes || Data.ResourceTypes.First(rt => rt.Title == r.Type).IsHighlighted))
+                && (!anyResourceTypes || r.Type.IsHighlighted))
                 : Data.Resources;
         }
     }

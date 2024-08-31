@@ -6,9 +6,11 @@ namespace me;
 public class Resource
 {
     public int Id { get; set; }
-    public string Title { get; set;}
+    public string Title { get; set; }
     public string ProviderId { get; set; }
-    public string Type { get; set; }
+    public string TypeId { get; set; }
+    [JsonIgnore]
+    public virtual ResourceType Type { get; set; }
     public int Level { get; set; }
     [JsonConverter(typeof(TimeSpanJsonConverter))]
     public TimeSpan Duration { get; set; }
