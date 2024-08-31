@@ -1,8 +1,5 @@
 ﻿using me.console.Contracts;
 using Syncfusion.XlsIO;
-using System.Globalization;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace me.console.Services;
 
@@ -48,7 +45,8 @@ public class ExcelFileService : IExcelFileService, IDisposable
         if (!Providers.Any())
         {
             Providers.AddRange(
-                LoadTable("Providers", rowCells => {
+                LoadTable("Providers", rowCells =>
+                {
                     return new Provider
                     {
                         Id = rowCells[0].DisplayText,
@@ -66,7 +64,8 @@ public class ExcelFileService : IExcelFileService, IDisposable
         if (!Resources.Any())
         {
             Resources.AddRange(
-                LoadTable("Resources", rowCells => {
+                LoadTable("Resources", rowCells =>
+                {
 
                     var durationSplit = rowCells[5].DisplayText.Split(':');
                     var durationTotalHours = TimeSpan.FromHours(double.Parse(durationSplit[0]));
@@ -79,7 +78,7 @@ public class ExcelFileService : IExcelFileService, IDisposable
                         Id = int.Parse(rowCells[0].DisplayText),
                         Title = rowCells[1].DisplayText,
                         ProviderId = rowCells[2].DisplayText,
-                        Type = rowCells[3].DisplayText,
+                        TypeId = rowCells[3].DisplayText,
                         Level = int.Parse(rowCells[4].DisplayText),
                         Duration = durationDays + durationHours + durationMinutes,
                         Url = rowCells[7].DisplayText
@@ -91,13 +90,14 @@ public class ExcelFileService : IExcelFileService, IDisposable
 
         return Resources;
     }
-    
+
     public ICollection<Tag> GetTags()
     {
         if (!Tags.Any())
         {
             Tags.AddRange(
-                LoadTable("Tags", rowCells => {
+                LoadTable("Tags", rowCells =>
+                {
                     return new Tag
                     {
                         Id = int.Parse(rowCells[0].DisplayText),
@@ -117,7 +117,8 @@ public class ExcelFileService : IExcelFileService, IDisposable
         if (!ResourceTags.Any())
         {
             ResourceTags.AddRange(
-                LoadTable("ResourceTags", rowCells => {
+                LoadTable("ResourceTags", rowCells =>
+                {
                     return new ResourceTag
                     {
                         ResourceId = int.Parse(rowCells[0].DisplayText),
@@ -158,7 +159,7 @@ public class ExcelFileService : IExcelFileService, IDisposable
 
         return result;
     }
-    
+
     public void Dispose()
     {
         ExcelEngine.Dispose();

@@ -23,7 +23,7 @@
 
                     <div class="e-list-wrapper e-list-multi-line e-list-avatar">
                         <span class="e-avatar e-avatar-circle">@(resource.ProviderId)</span>
-                        <span class="e-list-item-header" style="word-wrap: break-word;">
+                        <span class="e-list-item-header e-list-multi-line" style="word-wrap: break-word;">
                             @if (resource.Url.StartsWith("http"))
                             {
                                 <a href="@resource.Url" target="_blank">@GetResourceHeader(resource)</a>
@@ -36,17 +36,18 @@
                         <span class="e-list-content" style="word-wrap: break-word;">
                             <SfChip>
                                 <ChipItems>
-                                    <ChipItem Text="@($"{resource.Experience.ToString("N2")} xp")"></ChipItem>
-                                    <ChipItem Text="@GetLevelString(resource.Level)"></ChipItem>
-                                    <ChipItem Text="@GetDurationString(resource.Duration)"></ChipItem>
-                                    <ChipItem Text="@resource.Type"></ChipItem>
+                                    <ChipItem CssClass="e-outline" Text="@resource.Provider.Title"></ChipItem>
+                                    <ChipItem CssClass="e-outline" Text="@($"{resource.Experience.ToString("N2")} xp")"></ChipItem>
+                                    <ChipItem CssClass="e-outline" Text="@GetLevelString(resource.Level)"></ChipItem>
+                                    <ChipItem CssClass="e-outline" Text="@GetDurationString(resource.Duration)"></ChipItem>
+                                    <ChipItem Text="@resource.Type.Title" CssClass="@(resource.Type.IsHighlighted ? "e-primary" : "")"></ChipItem>
                                 </ChipItems>
                             </SfChip>
                             <SfChip>
                                 <ChipItems>
                                     @foreach (var resourceTag in resource.ResourceTags)
                                     {
-                                        <ChipItem Text="@resourceTag.Tag.Title"></ChipItem>
+                                        <ChipItem Text="@resourceTag.Tag.Title" CssClass="@(resourceTag.Tag.IsHighlighted ? "e-primary" : "")"></ChipItem>
                                     }
                                 </ChipItems>
                             </SfChip>
@@ -60,10 +61,6 @@
 
 @code {
     [Parameter] public IEnumerable<Resource> Items { get; set; } = Enumerable.Empty<Resource>();
-
-    public string ProviderTitleValue = string.Empty;
-    public string TitleValue = string.Empty;
-    public string TypeValue = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,6 +107,6 @@
 
     private string GetResourceHeader(Resource resource)
     {
-        return $"{resource.Provider.Title} | {resource.Title}";
+        return $"{resource.Title}";
     }
 }
