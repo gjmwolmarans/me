@@ -15,9 +15,8 @@ public class ResourceTag
     {
         get
         {
-            var resourceTagTypes = Resource.ResourceTags.Select(rt => rt.Tag.Type).Distinct();
             var taggedResourceTags = Resource.ResourceTags.Where(rt => rt.Tag.Type == Tag.Type);
-            return Resource.Experience / resourceTagTypes.Count() / taggedResourceTags.Count();
+            return Resource.Experience / taggedResourceTags.Count();
         }
     }
 }

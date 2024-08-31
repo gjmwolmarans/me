@@ -20,9 +20,7 @@
 
 <FluentGrid>
     <FluentGridItem sm="12" md="12" lg="3">
-        <XPCounter TotalXP="@(Data.Tags.Any(t => t.IsHighlighted) || Data.ResourceTypes.Any(rt => rt.IsSelected) ?
-                FilteredResources.SelectMany(r => r.ResourceTags).Sum(t => t.WeightedExperience) :
-                TotalXP)" />
+        <XPCounter TotalXP="@TotalXP" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="9">
         <RoleList @bind-Items="@Data.Roles" />
@@ -53,7 +51,14 @@
             {
                 _totalXP = Data.Tags.Sum(t => t.WeightedExperience);
             }
-            return _totalXP;
+            var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
+            var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
+            return highlightedTags.Any() || selectedResourceTypes.Any()
+                ? FilteredResources.SelectMany(r => r.ResourceTags)
+                    .Where(rt => highlightedTags.Contains(rt.Tag) 
+                        || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.Type)))
+                    .Sum(t => t.WeightedExperience)
+                : _totalXP;
         }
     }
 
@@ -64,8 +69,7 @@
             var anyTags = Data.Tags.Any(t => t.IsHighlighted);
             var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
             return anyTags || anyResourceTypes
-                ? Data.Resources.Where(r =>
-                (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+                ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
                 && (!anyResourceTypes || Data.ResourceTypes.First(rt => rt.Title == r.Type).IsHighlighted))
                 : Data.Resources;
         }
