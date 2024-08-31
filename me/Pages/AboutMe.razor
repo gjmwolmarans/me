@@ -59,9 +59,9 @@
             var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
             return highlightedTags.Any() || selectedResourceTypes.Any()
                 ? FilteredResources
-                    .Where(r => !selectedResourceTypes.Any() || r.Type.IsSelected)
                     .SelectMany(r => r.ResourceTags)
-                    .Where(rt => highlightedTags.Contains(rt.Tag))
+                    .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
+                        || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
                     .Sum(t => t.WeightedExperience)
                 : _totalXP;
         }
