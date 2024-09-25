@@ -4,4 +4,4 @@ My academic path began with Pascal and Delphi, and I transitioned to Lazarus dur
 
 Earning 14 Microsoft certifications has been a key part of my journey, helping me stay on top of the latest trends and technologies. I love solving tough technical problems and building scalable systems, whether in DevOps, Data Engineering, or AI. Continuous learning is the core of my approach.
 
-In my free time, I enjoy exploring new tech and balancing work with personal pursuits. I believe that achieving success requires professional and personal balance, and I’m always looking for ways to excel in both, and bring innovation to life.
+In my free time, I enjoy exploring new tech, and balancing work with personal pursuits. I believe that achieving success requires professional, and personal balance, I’m always looking for ways to excel in both, and bring innovation to life.
