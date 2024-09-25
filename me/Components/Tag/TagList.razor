@@ -3,58 +3,25 @@
 
 @if (Items.Any())
 {
-    <h3>
-        Tags @if (Items.Any(t => t.IsSelected)) {<FluentIcon OnClick="ClearSelection" Value="@(new Icons.Regular.Size24.FilterDismiss())" />
-        }
-    </h3>
-    <SfChip @ref="_chip" Selection="SelectionType.Multiple">
-        <ChipEvents OnClick="@OnClick"></ChipEvents>
-        <ChipItems>
-            @foreach (var tag in Items.OrderByDescending(t => t.WeightedExperience).ThenBy(t => t.ResourceTags.Count()))
-            {
-                <ChipItem Text="@tag.Title" CssClass="@(tag.IsHighlighted ? "e-primary" : "")"></ChipItem>
-            }
-        </ChipItems>
-    </SfChip>
+    <h3>Tags</h3>
+    foreach (var (title, tags) in GroupedItems)
+    {
+        
+        <TagTypeGroup Items="@tags" GroupTitle="@title" @bind-IsLoading=IsLoading />
+    }
 }
 
 @code {
     [Parameter] public IEnumerable<Tag> Items { get; set; } = Enumerable.Empty<Tag>();
     [Parameter] public EventCallback<IEnumerable<Tag>> ItemsChanged { get; set; }
 
-    [Parameter] public bool IsLoading { get; set; }
-    [Parameter] public EventCallback<bool> IsLoadingChanged { get; set; }
+    public IOrderedEnumerable<(string Key, IEnumerable<Tag> Tags)> GroupedItems => Items.GroupBy(t => t.Type).Select(g => ( Key: g.Key, Tags: g.AsEnumerable())).OrderByDescending(g => g.Tags.Sum(t => t.WeightedExperience));
 
-    public SfChip? _chip { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback<bool> IsLoadingChanged { get; set; }    
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-    }
-
-    private async Task OnClick(ChipEventArgs args)
-    {
-        await IsLoadingChanged.InvokeAsync(true);
-        var tag = Items.FirstOrDefault(r => r.Title == args.Text);
-
-        if (tag != null)
-        {
-            tag.IsSelected = !tag.IsSelected;
-            await ItemsChanged.InvokeAsync(Items);
-            ResetSelection();
-        }
-        await IsLoadingChanged.InvokeAsync(false);
-    }
-
-    public void ResetSelection()
-    {
-        _chip?.SelectChips(Items.Where(t => t.IsSelected).Select(t => t.Title).ToArray());
-    }
-
-    public async Task ClearSelection()
-    {
-        _chip.SelectedChips = Enumerable.Empty<string>().ToArray();
-        Items.Where(t => t.IsSelected).ToList().ForEach(t => t.IsSelected = false);
-        await ItemsChanged.InvokeAsync(Items);
     }
 }
