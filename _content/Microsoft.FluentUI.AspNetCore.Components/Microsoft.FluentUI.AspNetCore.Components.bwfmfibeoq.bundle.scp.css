@@ -6,6 +6,18 @@ fluent-anchored-region[b-2ov9fhztky] {
     fluent-anchored-region > *[b-2ov9fhztky] {
         pointer-events: all;
     }
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Anchor/FluentAnchor.razor.rz.scp.css */
+fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(control) {
+    display: inline-flex !important;
+}
+
+fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(start) {
+    margin-inline-end: calc(var(--design-unit) * 1px);
+}
+
+fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
+    margin-inline-start: calc(var(--design-unit) * 1px);
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/AppBar/FluentAppBar.razor.rz.scp.css */
 [b-dkkdhxy2t7] .fluent-appbar-item {
     width: 100%;
@@ -203,7 +215,7 @@ fluent-data-grid[b-ppmhrkw1mj] {
 [b-ppmhrkw1mj] .empty-content-row,
 [b-ppmhrkw1mj] .loading-content-row {
     width: 100%;
-    height: 100% !important ;
+    height: 100% !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -211,11 +223,10 @@ fluent-data-grid[b-ppmhrkw1mj] {
 
 [b-ppmhrkw1mj] .empty-content-cell,
 [b-ppmhrkw1mj] .loading-content-cell {
-
     font-weight: 600;
 }
 
-.col-options[b-ppmhrkw1mj] {
+.col-options[b-ppmhrkw1mj], .col-resize[b-ppmhrkw1mj] {
     position: absolute;
     min-width: 250px;
     top: 2.2rem;
@@ -253,7 +264,6 @@ fluent-data-grid[b-ppmhrkw1mj] {
     align-items: center;
 }
 
-
 [b-ppmhrkw1mj] .col-width-draghandle {
     height: auto;
     width: calc(var(--design-unit) * 1px + 2px);
@@ -273,6 +283,12 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
     text-overflow: ellipsis;
 }
 
+.auto-fit fluent-data-grid-cell[b-w6qdxfylwy] {
+    text-overflow: unset;
+    overflow: visible;
+    visibility: hidden;
+}
+
 .multiline-text[b-w6qdxfylwy] {
     white-space: inherit;
     overflow: auto;
@@ -289,14 +305,12 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
 }
 
     .column-header.col-justify-end[b-w6qdxfylwy], .column-header.col-justify-right[b-w6qdxfylwy] {
-
         padding-right: 1px;
         padding-left: 1px;
         justify-content: end;
     }
 
     .column-header.col-justify-center[b-w6qdxfylwy] {
-
         padding-left: 1px;
         padding-right: 1px;
         justify-content: center;
@@ -307,20 +321,20 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
         flex-grow: 1;
     }
 
-    .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container {
-        display: flex;
-        flex-grow: 1;
-    }
-
-    .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button {
-        flex-grow: 1;
-        padding-inline-end: 5px;
-    }
-
-        .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button::part(content) {
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container {
+            display: flex;
+            flex-grow: 1;
         }
+
+            .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button {
+                flex-grow: 1;
+                padding-inline-end: 5px;
+            }
+
+                .column-header[b-w6qdxfylwy] >  .keycapture .col-sort-container .col-sort-button::part(content) {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
 
     .column-header.col-justify-end[b-w6qdxfylwy]  .col-title-text, .column-header.col-justify-right[b-w6qdxfylwy]  .col-title-text {
         text-align: end;
@@ -347,12 +361,20 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
     text-overflow: ellipsis;
 }
 
+[b-w6qdxfylwy] .col-sort-button.disabled::part(control) {
+    opacity: 1 !important;
+}
+
 .col-justify-center[b-w6qdxfylwy]  .col-sort-button::part(control) {
     justify-content: center;
 }
 
 .col-justify-end[b-w6qdxfylwy]  .col-sort-button::part(control), .col-justify-right[b-w6qdxfylwy]  .col-sort-button::part(control) {
     justify-content: end;
+}
+
+.col-justify-end[b-w6qdxfylwy]  .col-sort-button::part(start), .col-justify-right[b-w6qdxfylwy]  .col-sort-button::part(start) {
+    margin-inline-end: 0 !important;
 }
 
 .col-justify-center[b-w6qdxfylwy] {
@@ -380,9 +402,6 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
     white-space: nowrap;
     font-weight: 600;
 }
-
-
-
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/DataGrid/FluentDataGridRow.razor.rz.scp.css */
 .header[b-upi3f9mbnn] {
     padding: 0;
@@ -393,7 +412,7 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
     z-index: 3;
 }
 
-.hover:not([row-type='header'],[row-type='sticky-header']):hover[b-upi3f9mbnn] {
+.hover:not([row-type='header'],[row-type='sticky-header'],.loading-content-row):hover[b-upi3f9mbnn] {
     cursor: pointer;
     background-color: var(--datagrid-hover-color, var(--neutral-fill-stealth-hover));
 }
@@ -3112,7 +3131,6 @@ fluent-tab[b-urryfr514w] {
         width: calc( 100% - 12px);
         justify-content: flex-start;
         padding-inline-start: 24px;
-
     }
 
     .fluent-toast[b-uq7572caeb]  .fluent-toast-small {
@@ -3122,6 +3140,7 @@ fluent-tab[b-urryfr514w] {
 
     .fluent-toast[b-uq7572caeb]  .fluent-toast-action:has(.timestamp) {
         cursor: initial;
+        width: auto;
     }
 
     .fluent-toast[b-uq7572caeb]  .fluent-toast-details {
