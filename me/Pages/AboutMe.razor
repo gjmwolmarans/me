@@ -10,13 +10,14 @@
 
 <FluentStack Orientation="Orientation.Vertical">
     <h1>Hello, world!</h1>
-    <p></p>
+    <MarkdownView Content="@AboutMarkdown" />
 </FluentStack>
 
 <h2>Competency Matrix</h2>
 
 <div style="width: 95vw; height: auto; overflow-y: hidden;">
-    <iframe width="100%" height="680" frameborder="0" scrolling="no" src="https://onedrive.live.com/embed?resid=F9480B74B852B3B7%21251307&authkey=%21ALWOWl3ShAlVT70&em=2&wdAllowInteractivity=False&Item=ClusterExperience&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edesNext=false&resen=false&ed1JS=false"></iframe>
+    <iframe width="100%" height="680" frameborder="0" scrolling="no"
+        src="https://onedrive.live.com/embed?resid=F9480B74B852B3B7%21251307&authkey=%21ALWOWl3ShAlVT70&em=2&wdAllowInteractivity=False&Item=ClusterExperience&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edesNext=false&resen=false&ed1JS=false"></iframe>
 </div>
 
 <FluentGrid>
@@ -43,7 +44,10 @@
 
 @code {
     Data Data { get; set; } = new();
+    string AboutMarkdown { get; set; } = null;
 
+    [Inject]
+    HttpClient Http { get; set; }
     private bool _isLoading { get; set; }
 
     private double _totalXP = default;
@@ -58,12 +62,12 @@
             var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
             var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
             return highlightedTags.Any() || selectedResourceTypes.Any()
-                ? FilteredResources
-                    .SelectMany(r => r.ResourceTags)
-                    .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
-                        || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
-                    .Sum(t => t.WeightedExperience)
-                : _totalXP;
+            ? FilteredResources
+            .SelectMany(r => r.ResourceTags)
+            .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
+            || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
+            .Sum(t => t.WeightedExperience)
+            : _totalXP;
         }
     }
 
@@ -74,9 +78,9 @@
             var anyTags = Data.Tags.Any(t => t.IsHighlighted);
             var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
             return anyTags || anyResourceTypes
-                ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
-                && (!anyResourceTypes || r.Type.IsHighlighted))
-                : Data.Resources;
+            ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+            && (!anyResourceTypes || r.Type.IsHighlighted))
+            : Data.Resources;
         }
     }
 
@@ -86,6 +90,7 @@
         await base.OnInitializedAsync();
 
         _isLoading = true;
+        AboutMarkdown = await Http.GetStringAsync("ABOUT.md");
         Data = await ExcelFileService.LoadData();
         _isLoading = false;
     }

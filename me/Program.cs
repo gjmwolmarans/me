@@ -5,6 +5,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using me;
 using Syncfusion.Blazor;
 using me.Helpers;
+using Ganss.XSS;
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzM4OTY5NEAzMjM2MmUzMDJlMzBJTkpwTk8zeWNKMXJPVzJkZ0l2U0lndUp6cmlhZ28wRWJuSGFMdE1KN29JPQ==");
 
@@ -21,6 +22,13 @@ builder.Services.AddSingleton<IExcelFileService, ExcelFileService>();
 builder.Services.AddFluentUIComponents();
 
 builder.Services.AddSyncfusionBlazor();
+
+builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(o =>
+{
+    var sanitizer = new HtmlSanitizer();
+    sanitizer.AllowedAttributes.Add("class");
+    return sanitizer;
+});
 
 var app = builder.Build();
 
