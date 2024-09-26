@@ -4,10 +4,13 @@
 @if (Items.Any())
 {
     <h3>Tags</h3>
-    foreach (var (title, tags) in GroupedItems)
+    foreach (var (key, group) in GroupedItems)
     {
         
-        <TagTypeGroup Items="@tags" GroupTitle="@title" @bind-IsLoading=IsLoading />
+        <TagTypeGroup Items="@group" ItemsChanged="@((items) => {
+            items.ToList().ForEach(t => Items.First(i => i.Id == t.Id).IsSelected = t.IsSelected);
+            ItemsChanged.InvokeAsync(Items);
+        })" GroupTitle="@key" @bind-IsLoading=IsLoading />
     }
 }
 

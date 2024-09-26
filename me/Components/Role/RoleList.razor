@@ -1,8 +1,6 @@
 @using me.shared
 @using Syncfusion.Blazor.Buttons
 
-@inject IExcelFileService Data
-
 @if (Items.Any())
 {
     <h3>
@@ -49,7 +47,7 @@
 
     public async Task ClearSelection()
     {
-        _chip.SelectedChips = Enumerable.Empty<string>().ToArray();
+        _chip.SelectedChips = Array.Empty<string>();
         Items.Where(r => r.IsSelected).ToList().ForEach(r => r.IsSelected = false);
         await ItemsChanged.InvokeAsync(Items);
     }
