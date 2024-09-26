@@ -60,7 +60,7 @@
 }
 
 @code {
-    [Parameter] public IEnumerable<Resource> Items { get; set; } = Enumerable.Empty<Resource>();
+    [Parameter] public IOrderedEnumerable<Resource> Items { get; set; } = Enumerable.Empty<Resource>().Order();
 
     protected override async Task OnInitializedAsync()
     {
