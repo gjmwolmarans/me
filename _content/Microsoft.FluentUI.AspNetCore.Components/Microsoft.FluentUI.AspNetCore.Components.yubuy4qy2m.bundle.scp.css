@@ -7,15 +7,18 @@ fluent-anchored-region[b-2ov9fhztky] {
         pointer-events: all;
     }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Anchor/FluentAnchor.razor.rz.scp.css */
-fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(control) {
-    display: inline-flex !important;
-}
 
 fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(start) {
+    display: unset;
+    position: relative;
+    top: calc(var(--design-unit)* 1px);
     margin-inline-end: calc(var(--design-unit) * 1px);
 }
 
 fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
+    display: unset;
+    position: relative;
+    top: calc(var(--design-unit)* 1px);
     margin-inline-start: calc(var(--design-unit) * 1px);
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/AppBar/FluentAppBar.razor.rz.scp.css */
@@ -116,6 +119,8 @@ fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Button/FluentButton.razor.rz.scp.css */
 .loading-button[b-x1200685t0] {
     position: relative;
+    height: calc((var(--base-height-multiplier) + var(--density))* var(--design-unit)* 1px);
+    display: inline-block;
 }
 
     .loading-button[b-x1200685t0]  fluent-progress-ring {
@@ -2067,6 +2072,9 @@ div[dragged-over][b-qxma62j335] {
     border-radius: calc(var(--control-corner-radius) * 1px);
     padding: 0 12px;
     column-gap: 8px;
+}
+
+.fluent-messagebar-animation[b-ig2qs97tvl] {
     animation: fadein-b-ig2qs97tvl 1.5s;
 }
 
@@ -2175,7 +2183,6 @@ div[dragged-over][b-qxma62j335] {
     min-height: 36px;
     padding: 0 12px;
     column-gap: 8px;
-    animation: fadein-b-ig2qs97tvl 1.5s;
 }
 
     .fluent-messagebar-notification.intent-info[b-ig2qs97tvl] {
@@ -2714,16 +2721,18 @@ div[dragged-over][b-qxma62j335] {
         display: none;
     }
 
-    .fluent-profile-menu[top-corner][b-rsm9d6pikk]  fluent-anchored-region {
+    .fluent-profile-menu[top-corner][b-rsm9d6pikk]  + div + fluent-anchored-region {
         transform: unset !important;
         left: unset;
         right: -4px;
+        top: 32px;
     }
 
-[dir="rtl"] .fluent-profile-menu[top-corner][b-rsm9d6pikk]  fluent-anchored-region {
+[dir="rtl"] .fluent-profile-menu[top-corner][b-rsm9d6pikk]  + div + fluent-anchored-region {
     transform: unset !important;
     left: -4px;
     right: unset;
+    top: 32px;
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/PullToRefresh/FluentPullToRefresh.razor.rz.scp.css */
 .fluent-pull-container[b-rq0hhda1ik] {
