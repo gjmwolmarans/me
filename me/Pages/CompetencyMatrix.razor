@@ -1,0 +1,88 @@
+@page "/competency-matrix"
+
+@using Syncfusion.Blazor.Spinner
+
+@inject IExcelFileService ExcelFileService
+
+<PageTitle>gjmwolmarans.me | Competency Matrix</PageTitle>
+
+<h1>Competency Matrix</h1>
+
+<ExcelGraph />
+
+<FluentGrid>
+    <FluentGridItem sm="12" md="6" lg="3">
+        <XPCounter TotalXP="@TotalXP" />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="6" lg="3">
+        <ChipHelp />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="6">
+        <RoleList @bind-Items="@Data.Roles" />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <TagList @bind-Items="@Data.Tags" @bind-IsLoading="@_isLoading" />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <ResourceTypeList @bind-Items="@Data.ResourceTypes" />
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <ResourceList Items="@(FilteredResources.OrderByDescending(r => r.Id))" />
+    </FluentGridItem>
+    <SfSpinner @bind-Visible="@_isLoading" />
+</FluentGrid>
+
+@code {
+    Data Data { get; set; } = new();
+
+    private bool _isLoading { get; set; }
+    private double _totalXP = default;
+    public double TotalXP
+    {
+        get
+        {
+            if (_totalXP == default)
+            {
+                _totalXP = Data.ResourceTags.Sum(t => t.WeightedExperience);
+            }
+            var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
+            var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
+            return highlightedTags.Any() || selectedResourceTypes.Any()
+            ? FilteredResources
+            .SelectMany(r => r.ResourceTags)
+            .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
+            || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
+            .Sum(t => t.WeightedExperience)
+            : _totalXP;
+        }
+    }
+
+    IEnumerable<Resource> FilteredResources
+    {
+        get
+        {
+            var anyTags = Data.Tags.Any(t => t.IsHighlighted);
+            var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
+            return anyTags || anyResourceTypes
+            ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+            && (!anyResourceTypes || r.Type.IsHighlighted))
+            : Data.Resources;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _isLoading = true;
+        Task.Run(async () =>
+        {
+            Data = await ExcelFileService.LoadData();
+            await InvokeAsync(StateHasChanged);
+        });
+        _isLoading = false;
+    }
+
+
+
+}

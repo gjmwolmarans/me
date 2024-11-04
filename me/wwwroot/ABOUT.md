@@ -1,3 +1,5 @@
+# Hello, world!
+
 Growing up in a small rural town, I was fortunate to be introduced to computers and technology early on. I also had good scores in Mathematics, and Information Technology in high school. This exposure led me to pursue a career in Software Engineering.
 
 My Software Engineering path began with Pascal and Delphi, and I transitioned to Lazarus during university. For my C and C++ university modules, I initially used Code::Blocks before moving to Visual Studio, and eventually used QT for more advanced modules. Along the way, and outside of formal training, I’ve completed many books, courses, labs, and tutorials in Cloud, Data, DevOps, Desktop, Mobile, and Web technologies.
