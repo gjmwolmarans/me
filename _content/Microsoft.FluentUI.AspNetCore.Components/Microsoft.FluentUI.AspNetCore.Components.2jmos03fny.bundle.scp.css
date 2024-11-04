@@ -22,10 +22,14 @@ fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
     margin-inline-start: calc(var(--design-unit) * 1px);
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/AppBar/FluentAppBar.razor.rz.scp.css */
+.fluent-appbar[b-dkkdhxy2t7] {
+    --appbar-item-size: 68;
+}
+
 [b-dkkdhxy2t7] .fluent-appbar-item {
-    width: 100%;
+    width: calc(var(--appbar-item-size) * 1px);
     --appbar-active-indicator-width: calc(var(--design-unit) * 0.5px);
-    height: var(--appbar-item-height, 56px);
+    height: calc(var(--appbar-item-size) * 1px - 20px);
 }
 
     [b-dkkdhxy2t7] .fluent-appbar-item:hover {
@@ -56,7 +60,7 @@ fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
     text-align: center;
 }
 
-[b-dkkdhxy2t7] .fluent-appbar-item:not(.popover) a.active::before {
+.fluent-appbar[orientation=vertical][b-dkkdhxy2t7]  .fluent-appbar-item:not([inpopover]) a.active::before {
     content: "";
     position: absolute;
     width: var(--appbar-active-indicator-width);
@@ -68,16 +72,16 @@ fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
     right: unset;
 }
 
-[b-dkkdhxy2t7] .fluent-appbar-item.fluent-appbar-item-local:not(.popover) a.active::before {
+.fluent-appbar[orientation=vertical][b-dkkdhxy2t7]  .fluent-appbar-item.fluent-appbar-item-local:not([inpopover]) a.active::before {
     all: initial;
 }
 
-[dir='rtl'] *[b-dkkdhxy2t7]  .fluent-appbar-item:not(.popover) a.active::before {
+[dir='rtl'] .fluent-appbar[orientation=vertical][b-dkkdhxy2t7]  .fluent-appbar-item:not([inpopover]) a.active::before {
     right: calc(var(--design-unit) * 0.5px);
     left: unset;
 }
 
-[dir='rtl'] *[b-dkkdhxy2t7]  .fluent-appbar-item.fluent-appbar-item-local:not(.popover) a.active::before {
+[dir='rtl'] .fluent-appbar[orientation=vertical][b-dkkdhxy2t7]  .fluent-appbar-item.fluent-appbar-item-local:not([inpopover]) a.active::before {
     all: initial;
 }
 
@@ -96,11 +100,11 @@ fluent-anchor[appearance="hypertext"][b-acyx52swce]::part(end) {
     display: block;
 }
 
-[b-dkkdhxy2t7] .fluent-appbar-item.popover:not(:hover) a.active svg[part="icon-active"] {
+[b-dkkdhxy2t7] .fluent-appbar-item[inpopover]:not(:hover) a.active svg[part="icon-active"] {
     display: none;
 }
 
-[b-dkkdhxy2t7] .fluent-appbar-item.popover:not(:hover) a.active svg[part="icon-rest"] {
+[b-dkkdhxy2t7] .fluent-appbar-item[inpopover=true]:not(:hover) a.active svg[part="icon-rest"] {
     display: block;
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/BodyContent/FluentBodyContent.razor.rz.scp.css */
@@ -1777,11 +1781,13 @@ div[dragged-over][b-qxma62j335] {
     display: grid;
     grid-gap: 10px;
     background-color: var(--neutral-fill-hover);
+    border: 1px dashed var(--accent-fill-rest);
 }
 
     .fluent-inputfile-container[drop-files][b-72uj7bp8pi] {
-        border: 2px dashed var(--accent-foreground-focus);
+        border: 1px solid var(--accent-fill-rest);
     }
+
     .fluent-inputfile-container .inputfile-content[b-72uj7bp8pi] {
         grid-column: 1;
         grid-row: 1;
@@ -2074,7 +2080,7 @@ div[dragged-over][b-qxma62j335] {
     column-gap: 8px;
 }
 
-.fluent-messagebar-animation[b-ig2qs97tvl] {
+.fluent-messagebar[animation="fadein"][b-ig2qs97tvl] {
     animation: fadein-b-ig2qs97tvl 1.5s;
 }
 
@@ -3242,6 +3248,18 @@ fluent-tab[b-urryfr514w] {
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/TreeView/FluentTreeItem.razor.rz.scp.css */
 .treeitem-text[b-toee5o4b4e] {
     pointer-events: none;
+}
+
+[dir='rtl'] fluent-tree-item[selected][b-toee5o4b4e]::after {
+    right: calc(var(--focus-stroke-width)* 1px);
+}
+
+[dir='rtl'] fluent-tree-item.nested[b-toee5o4b4e]::part(expand-collapse-button) {
+    right: var(--expand-collapse-button-nested-width, calc((var(--base-height-multiplier) + var(--density))* var(--design-unit)* -1px));
+}
+
+[dir='rtl'] fluent-tree-item.nested:not(.expanded)[b-toee5o4b4e]::part(expand-collapse-button) {
+    transform: rotate(180deg);
 }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Wizard/FluentWizard.razor.rz.scp.css */
 .fluent-wizard[b-l81u9o5gjc] {
