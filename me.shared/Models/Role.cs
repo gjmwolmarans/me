@@ -4,7 +4,6 @@ namespace me;
 
 public class Role : SelectableBase
 {
-    public string Title { get; set; }
     [JsonIgnore]
     public virtual ICollection<Tag> Tags { get; set; }
     [JsonIgnore]

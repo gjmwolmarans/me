@@ -1,8 +1,11 @@
 @page "/competency-matrix"
 
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.WebUtilities
 @using Syncfusion.Blazor.Spinner
 
 @inject IExcelFileService ExcelFileService
+@inject NavigationManager NavigationManager
 
 <PageTitle>gjmwolmarans.me | Competency Matrix</PageTitle>
 
@@ -11,6 +14,9 @@
 <ExcelGraph />
 
 <FluentGrid>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <SfSpinner @bind-Visible="@_isLoading" />
+    </FluentGridItem>
     <FluentGridItem sm="12" md="6" lg="3">
         <XPCounter TotalXP="@TotalXP" />
     </FluentGridItem>
@@ -18,18 +24,17 @@
         <ChipHelp />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="6">
-        <RoleList @bind-Items="@Data.Roles" />
+        <RoleList Items="@Data.Roles" ItemsChanged="(items) => {Data.Roles = items; SetQueryState();}" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
-        <TagList @bind-Items="@Data.Tags" @bind-IsLoading="@_isLoading" />
+        <TagList Items="@Data.Tags" ItemsChanged="(items) => {Data.Tags = items; SetQueryState();}" @bind-IsLoading="@_isLoading" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
-        <ResourceTypeList @bind-Items="@Data.ResourceTypes" />
+        <ResourceTypeList Items="@Data.ResourceTypes" ItemsChanged="(items) => {Data.ResourceTypes = items; SetQueryState();}" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
         <ResourceList Items="@(FilteredResources.OrderByDescending(r => r.Id))" />
     </FluentGridItem>
-    <SfSpinner @bind-Visible="@_isLoading" />
 </FluentGrid>
 
 @code {
@@ -41,9 +46,13 @@
     {
         get
         {
+            if (Data == null)
+            {
+                return default;
+            }
             if (_totalXP == default)
             {
-                _totalXP = Data.ResourceTags.Sum(t => t.WeightedExperience);
+                _totalXP = Data.ResourceTags.Sum(t => t.WeightedExperience) ;
             }
             var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
             var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
@@ -55,6 +64,49 @@
             .Sum(t => t.WeightedExperience)
             : _totalXP;
         }
+    }
+
+    IDictionary<string, string[]> GetQueryState()
+    {
+        return new Dictionary<string, string[]>()
+        {
+            { "roles", Data.Roles.Where(r => r.IsSelected).Select(r => r.Title).ToArray() },
+            { "tags", Data.Tags.Where(t => t.IsSelected).Select(t => t.Title).ToArray() },
+            { "resourceTypes", Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title).ToArray() }
+        };
+    }
+
+    void SetQueryState()
+    {
+        var state = GetQueryState();
+
+        var uri =  NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        var qb = new QueryBuilder();
+        foreach (var (key, values) in state)
+        {
+            if (values.Any())
+            {
+                qb.Add(key, values);
+            }
+        }
+
+        NavigationManager.NavigateTo($"{uri.GetLeftPart(UriPartial.Path)}{qb.ToQueryString()}");
+    }
+
+    void LoadQueryState()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var qb =  QueryHelpers.ParseQuery(uri.Query);
+        var queryState = new Dictionary<string, string[]>();
+        foreach (var key in qb.Keys)
+        {
+            queryState.Add(key, qb[key].ToArray()!);
+        }
+
+        Data.Roles.ToList().ForEach(r => r.IsSelected = queryState.ContainsKey("roles") && queryState["roles"].Contains(r.Title));
+        Data.Tags.ToList().ForEach(t => t.IsSelected = queryState.ContainsKey("tags") && queryState["tags"].Contains(t.Title));
+        Data.ResourceTypes.ToList().ForEach(rt => rt.IsSelected = queryState.ContainsKey("resourceTypes") && queryState["resourceTypes"].Contains(rt.Title));
     }
 
     IEnumerable<Resource> FilteredResources
@@ -78,6 +130,9 @@
         Task.Run(async () =>
         {
             Data = await ExcelFileService.LoadData();
+
+            LoadQueryState();
+
             await InvokeAsync(StateHasChanged);
         });
         _isLoading = false;

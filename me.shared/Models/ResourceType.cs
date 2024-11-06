@@ -4,7 +4,6 @@ namespace me;
 
 public class ResourceType : SelectableBase
 {
-    public string Title { get; set; }
     [JsonIgnore]
     public virtual ICollection<Resource> Resources { get; set; }
     [JsonIgnore]
