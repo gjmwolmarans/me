@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "me",
   "resources": {
-    "hash": "sha256-3PCPZsg39XnWXrzaHST1Tv5B45HOD9KgAJPbvD2xuJg=",
+    "hash": "sha256-l7TVb2Zcky+WIj5WI+4PubWnW+Osactsc+MsD0b1PpQ=",
     "jsModuleNative": {
       "dotnet.native.8.0.10.4xsnm8lwn6.js": "sha256-QVxMlY7ohmjgde/bZMA0dlWDAeuUP+tEfkiSdg4DFcE="
     },
@@ -22,8 +22,8 @@
       "Blazor.Markdown.wasm": "sha256-9AjUdvMDzqA1p7rIEMeCNtcUFAbGPssvEH6l1UHfnlQ=",
       "HtmlSanitizer.wasm": "sha256-NuugfdJSqWfig8KTeYmSXrhk6JcluOH56lMzjBifbD8=",
       "Markdig.wasm": "sha256-Rckt+zHCs0ONRy2fQ05/JXYm2aUTQpL1izRewq/J6lw=",
-      "me.shared.wasm": "sha256-ic/kPVBr1gQZ+PK6GBRd1cEM0RywI+Q3TsnULvbeajQ=",
-      "me.wasm": "sha256-6V81A8cKWnV4UZDo19v/3cmNfbsYPsNVZ8rEzZP8ug0=",
+      "me.shared.wasm": "sha256-en0s9iCgKjoCD3lXNuh8fVStBevbQq0UuX759uzclX0=",
+      "me.wasm": "sha256-g0MHRfSIeM93weq3bb/vTFONmW+BaRqM4aMpvgYlEf0=",
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-OMEwVNAEiqKbQq/ZdbouxCLPtbWcJa7NfCDSCeUQDbU=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-A0BEcpC0Z6soYxRLSAVCBbmd6veNxwKvrIbvl5SmcSA=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-OnbIfmahltf07+mzZrrdp8JV9SuDoHR7XAjQl1p9+fI=",
@@ -43,7 +43,7 @@
       "Microsoft.Extensions.Logging.wasm": "sha256-gRNqDIITN9/LJz459bgijHJ1O+l5fzsybyrFhw0Iqa4=",
       "Microsoft.Extensions.Options.wasm": "sha256-gE1BXyLWVUnQwUrxnkNGo22RSc/PIEaAypz1VWboWP4=",
       "Microsoft.Extensions.Primitives.wasm": "sha256-DbFC7TmaZUBF5Kazn2wT/gxb5q0k5OE04MJEWLJdQ5c=",
-      "Microsoft.FluentUI.AspNetCore.Components.Icons.wasm": "sha256-RmasS0wq5hGdSAexLWhUQxF9SeF5ECy6GbheIyf137Q=",
+      "Microsoft.FluentUI.AspNetCore.Components.Icons.wasm": "sha256-6apWrXNQ2tP6v2uRiFKcXFC4uiIFUi1ZLJca3kfMmzs=",
       "Microsoft.FluentUI.AspNetCore.Components.wasm": "sha256-5pu18AycBpvF3/duSgHsDV/okEjFrSYvn0nTazJEg6w=",
       "Microsoft.JSInterop.wasm": "sha256-cLRIVK9XDeMu5VGcpXWNuXQkF9b63qmfT6r3fuwxvJo=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-r/+bWAAxKn2+Wu3MRYDXvKEbHjLNuptflgNuNhQdK6w=",
