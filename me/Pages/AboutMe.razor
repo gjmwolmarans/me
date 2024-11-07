@@ -1,6 +1,4 @@
-﻿@page "/"
-
-@using System.Collections.ObjectModel
+﻿@using System.Collections.ObjectModel
 
 <PageTitle>gjmwolmarans.me | About Me</PageTitle>
 
@@ -17,10 +15,6 @@
     </FluentGridItem>
 </FluentGrid>
 
-
-
-
-
 @code {
 
     string? AboutMarkdown { get; set; } = null;
@@ -29,9 +23,6 @@
 
     [Inject]
     HttpClient Http { get; set; }
-
-
-
 
     protected async override Task OnInitializedAsync()
     {
