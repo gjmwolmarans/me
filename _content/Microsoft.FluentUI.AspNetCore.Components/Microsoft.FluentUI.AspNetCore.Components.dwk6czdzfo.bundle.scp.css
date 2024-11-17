@@ -1,3 +1,7 @@
+/* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Accordion/FluentAccordionItem.razor.rz.scp.css */
+[dir='rtl'] fluent-accordion-item[b-d6xo7qntdj]::part(button) {
+    text-align: right;
+}
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/AnchoredRegion/FluentAnchoredRegion.razor.rz.scp.css */
 fluent-anchored-region[b-2ov9fhztky] {
     pointer-events: none;
@@ -617,6 +621,10 @@ fluent-data-grid-cell[b-w6qdxfylwy] {
     .fluent-calendar[b-bgn9u4guxz]  .animation-none {
         animation: none;
     }
+
+[dir="rtl"] .fluent-calendar[b-bgn9u4guxz]  .day[disabled]::before {
+    transform: translate(4px, 0px) rotate(45deg);
+}
 
 /*
     "Months" View
@@ -3082,7 +3090,7 @@ fluent-tab[b-urryfr514w] {
 }
 
 [b-urryfr514w] .fluent-tab-close {
-    fill: var(--neutral-fill-strong-active);
+    fill: var(--neutral-fill-strong-active) !important;
     cursor: pointer;
     max-width: 12px;
     max-height: 12px;
@@ -3090,7 +3098,7 @@ fluent-tab[b-urryfr514w] {
 }
 
     [b-urryfr514w] .fluent-tab-close:hover {
-        fill: var(--neutral-fill-strong-hover);
+        fill: var(--neutral-fill-strong-hover) !important;
     }
 /* _content/Microsoft.FluentUI.AspNetCore.Components/Components/Toast/FluentToast.razor.rz.scp.css */
 .fluent-toast[b-uq7572caeb] {
