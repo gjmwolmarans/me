@@ -136,15 +136,17 @@
         await base.OnInitializedAsync();
 
         _isLoading = true;
+        await InvokeAsync(StateHasChanged);
         Task.Run(async () =>
         {
             Data = await ExcelFileService.LoadData();
 
             LoadQueryState();
 
+            _isLoading = false;
+
             await InvokeAsync(StateHasChanged);
         });
-        _isLoading = false;
     }
 
 
