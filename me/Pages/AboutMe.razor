@@ -1,0 +1,34 @@
+﻿@using System.Collections.ObjectModel
+
+<PageTitle>gjmwolmarans.me | About Me</PageTitle>
+
+<FluentGrid Spacing="4">
+    <FluentGridItem sm="12" md="12" lg="6">
+        <FluentCard>
+            <MarkdownView Content="@AboutMarkdown" />
+        </FluentCard>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="6">
+        <FluentCard>
+            <MarkdownView Content="@WorkExperienceMarkdown" />
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+
+    string? AboutMarkdown { get; set; } = null;
+
+    string? WorkExperienceMarkdown { get; set; } = null;
+
+    [Inject]
+    HttpClient Http { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        AboutMarkdown = await Http.GetStringAsync("ABOUT.md");
+        WorkExperienceMarkdown = await Http.GetStringAsync("WORK_EXPERIENCE.md");
+    }
+}

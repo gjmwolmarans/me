@@ -1,0 +1,31 @@
+﻿@using System.Collections.ObjectModel
+@using System.Text
+@using me.shared
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Lists
+@using Syncfusion.Blazor.Buttons
+
+@inject IExcelFileService Data;
+
+@if (Items.Any())
+{
+    <h3>Resources</h3>
+    <SfListView DataSource="@Items.OrderByDescending(x => x.Id)" CssClass="e-list-template" Width="95vw"
+        SortOrder="Syncfusion.Blazor.Lists.SortOrder.Ascending" EnableVirtualization="true">
+        <ListViewFieldSettings TValue="Resource" Id="@nameof(Resource.Id)" Text="@nameof(Resource.Title)">
+        </ListViewFieldSettings>
+        <ListViewTemplates TValue="Resource">
+            <Template>
+                @{
+                    var resource = context as Resource;
+                    <ResourceListItem @bind-Item="@(resource)" Update="@(async tag => { await Toggle.InvokeAsync(tag); })" />
+                }
+            </Template>
+        </ListViewTemplates>
+    </SfListView>
+}
+
+@code {
+    [Parameter] public EventCallback<SelectableBase> Toggle { get; set; }
+    [Parameter] public IOrderedEnumerable<Resource> Items { get; set; } = Enumerable.Empty<Resource>().Order();
+}

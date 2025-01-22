@@ -1,0 +1,188 @@
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.WebUtilities
+@using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.Cards
+
+@inject IExcelFileService ExcelFileService
+@inject NavigationManager NavigationManager
+
+<PageTitle>gjmwolmarans.me | Competency Matrix</PageTitle>
+
+<h1>Competency Matrix</h1>
+
+<ExcelGraph/>
+
+<FluentGrid>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <SfSpinner @bind-Visible="@_isLoading"/>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="6" lg="3">
+        <XPCounter TotalXP="@TotalXP"/>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="6" lg="3">
+        <FluentStack Orientation="Orientation.Vertical">
+            <ChipHelp/>
+            <FluentSpacer/>
+            <a href="https://bit.ly/gjmwolmarans-CM-xlsx" download target="_blank"
+               style="width: 100%; text-decoration: none;">
+                <SfCard>
+                    <CardContent>
+                        <FluentStack Orientation="Orientation.Horizontal">
+                            <FluentIcon Value="@(new Icons.Regular.Size48.DocumentRibbon())" Color="@Color.Success"/>
+                            <FluentStack Orientation="Orientation.Vertical">
+                                <FluentLabel Typo="Typography.H5">CompetencyMatrix.xlsx</FluentLabel>
+                                <FluentLabel Typo="Typography.Subject">Download</FluentLabel>
+                            </FluentStack>
+                        </FluentStack>
+                    </CardContent>
+                </SfCard>
+            </a>
+        </FluentStack>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="6">
+        <RoleList @ref="_roleList" Items="@Data.Roles"
+                  ItemsChanged="(items) => {Data.Roles = items; SetQueryState();}"/>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <TagList @ref="_tagList" Items="@Data.Tags" ItemsChanged="(items) => {Data.Tags = items; SetQueryState();}"
+                 @bind-IsLoading="@_isLoading"/>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <ResourceTypeList @ref="_resourceTypeList" Items="@Data.ResourceTypes"
+                          ItemsChanged="(items) => {Data.ResourceTypes = items; SetQueryState();}"/>
+    </FluentGridItem>
+    <FluentGridItem sm="12" md="12" lg="12">
+        <ResourceList Items="@(FilteredResources.OrderByDescending(r => r.Id))" Toggle=@ToggleItem/>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    Data Data { get; set; } = new();
+
+    private RoleList? _roleList { get; set; }
+    private TagList? _tagList { get; set; }
+    private ResourceTypeList? _resourceTypeList { get; set; }
+
+    private bool _isLoading { get; set; }
+
+    private double _totalXP = default;
+
+    public double TotalXP
+    {
+        get
+        {
+            if (Data == null)
+            {
+                return default;
+            }
+
+            if (_totalXP == default)
+            {
+                _totalXP = Data.ResourceTags.Sum(t => t.WeightedExperience);
+            }
+
+            var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
+            var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
+            return highlightedTags.Any() || selectedResourceTypes.Any()
+                ? FilteredResources
+                    .SelectMany(r => r.ResourceTags)
+                    .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
+                                 || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
+                    .Sum(t => t.WeightedExperience)
+                : _totalXP;
+        }
+    }
+
+    IDictionary<string, string[]> GetQueryState()
+    {
+        return new Dictionary<string, string[]>()
+        {
+            { "roles", Data.Roles.Where(r => r.IsSelected).Select(r => r.Title).ToArray() },
+            { "tags", Data.Tags.Where(t => t.IsSelected).Select(t => t.Title).ToArray() },
+            { "resourceTypes", Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title).ToArray() }
+        };
+    }
+
+    void SetQueryState()
+    {
+        var state = GetQueryState();
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        var qb = new QueryBuilder();
+        foreach (var (key, values) in state)
+        {
+            if (values.Any())
+            {
+                qb.Add(key, values);
+            }
+        }
+
+        NavigationManager.NavigateTo($"{uri.GetLeftPart(UriPartial.Path)}{qb.ToQueryString()}");
+    }
+
+    void LoadQueryState()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var qb = QueryHelpers.ParseQuery(uri.Query);
+        var queryState = new Dictionary<string, string[]>();
+        foreach (var key in qb.Keys)
+        {
+            queryState.Add(key, qb[key].ToArray()!);
+        }
+
+        Data.Roles.ToList().ForEach(r => r.IsSelected = queryState.ContainsKey("roles") && queryState["roles"].Contains(r.Title));
+        Data.Tags.ToList().ForEach(t => t.IsSelected = queryState.ContainsKey("tags") && queryState["tags"].Contains(t.Title));
+        Data.ResourceTypes.ToList().ForEach(rt => rt.IsSelected = queryState.ContainsKey("resourceTypes") && queryState["resourceTypes"].Contains(rt.Title));
+
+        StateHasChanged();
+
+        ResetSelection();
+    }
+
+    public void ResetSelection()
+    {
+        _roleList?.ResetSelection();
+        _tagList?.ChildRefs.ForEach(t => t.ResetSelection());
+        _resourceTypeList?.ResetSelection();
+    }
+
+    IEnumerable<Resource> FilteredResources
+    {
+        get
+        {
+            var anyTags = Data.Tags.Any(t => t.IsHighlighted);
+            var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
+            return anyTags || anyResourceTypes
+                ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+                                            && (!anyResourceTypes || r.Type.IsHighlighted))
+                : Data.Resources;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _isLoading = true;
+        await InvokeAsync(StateHasChanged);
+        Task.Run(async () =>
+        {
+            Data = await ExcelFileService.LoadData();
+
+            LoadQueryState();
+
+            _isLoading = false;
+
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void ToggleItem(SelectableBase item)
+    {
+        SetQueryState();
+        ResetSelection();
+        StateHasChanged();
+    }
+
+}

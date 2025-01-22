@@ -1,0 +1,34 @@
+@using me.shared
+@using Syncfusion.Blazor.Buttons
+
+@if (Items.Any())
+{
+    <h3>Tags</h3>
+    foreach (var (key, group) in GroupedItems)
+    {
+        <TagTypeGroup @ref="ChildRef" Items="@group" ItemsChanged="@((items) => {
+            items.ToList().ForEach(t => Items.First(i => i.Id == t.Id).IsSelected = t.IsSelected);
+            ItemsChanged.InvokeAsync(Items);
+        })" GroupTitle="@key" @bind-IsLoading=IsLoading />
+    }
+}
+
+@code {
+    public List<TagTypeGroup> ChildRefs = new List<TagTypeGroup>();
+    TagTypeGroup ChildRef {
+        set { ChildRefs.Add(value); }
+    }
+    
+    [Parameter] public IEnumerable<Tag> Items { get; set; } = Enumerable.Empty<Tag>();
+    [Parameter] public EventCallback<IEnumerable<Tag>> ItemsChanged { get; set; }
+
+    public IOrderedEnumerable<(string Key, IEnumerable<Tag> Tags)> GroupedItems => Items.GroupBy(t => t.Type).Select(g => ( Key: g.Key, Tags: g.AsEnumerable())).OrderByDescending(g => g.Tags.Sum(t => t.WeightedExperience));
+
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback<bool> IsLoadingChanged { get; set; }    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+}

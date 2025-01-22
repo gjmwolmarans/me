@@ -1,0 +1,14 @@
+﻿@using Syncfusion.Blazor.Buttons
+
+<FluentMessageBar Title="Most chips are toggleable" Intent="@MessageIntent.Info">
+    <SfChip Selection="SelectionType.Multiple">
+        <ChipEvents OnClick="@((e) => _isHelpChipSelected = e.Selected)"></ChipEvents>
+        <ChipItems>
+            <ChipItem Text="Toggle me" CssClass="@(_isHelpChipSelected ? "e-primary" : "")"></ChipItem>
+        </ChipItems>
+    </SfChip>
+</FluentMessageBar>
+
+@code {
+    private bool _isHelpChipSelected { get; set; } = false;
+}

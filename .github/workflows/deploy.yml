@@ -1,0 +1,27 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4.1.5
+      - name: Substitute Secrets
+        uses: Lambdaspire/action-substitute-secrets-in-file@v1.1.0
+        with:
+          file: me/Program.cs
+          tokenPattern: ${TOKEN}
+          secretsJson: ${{ toJSON(secrets) }}
+      - name: Build and deploy
+        run: |
+          dotnet publish ./me/me.csproj -c Release -o publish
+          echo 'wwwroot' > publish/.nojekyll
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.7.2
+        with:
+          branch: gh-pages
+          folder: publish/wwwroot
