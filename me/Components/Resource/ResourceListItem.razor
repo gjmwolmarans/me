@@ -1,52 +1,54 @@
 @using Syncfusion.Blazor.Buttons
 @using System.Text
 
-<div class="e-list-wrapper e-list-multi-line e-list-avatar">
-    <span class="e-avatar e-avatar-circle">@(Item.ProviderId)</span>
-    <span class="e-list-item-header e-list-multi-line" style="word-wrap: break-word;">
-        @if (Item.Url.StartsWith("http"))
-        {
-            <a href="@Item.Url" target="_blank">@GetResourceHeader(Item)</a>
-        }
-        else
-        {
-            @GetResourceHeader(Item)
-        }
-    </span>
-    <span class="e-list-content" style="word-wrap: break-word;">
-        <SfChip>
-            <ChipItems>
-                <ChipItem CssClass="e-outline" Text="@Item.Provider.Title"></ChipItem>
-                <ChipItem CssClass="e-outline" Text="@($"{Item.Experience.ToString("N2")} xp")">
-                </ChipItem>
-                <ChipItem CssClass="e-outline" Text="@GetLevelString(Item.Level)"></ChipItem>
-                <ChipItem CssClass="e-outline" Text="@GetDurationString(Item.Duration)"></ChipItem>
-                <ChipItem Text="@Item.Type.Title" CssClass="@($"e-outline{(Item.Type.IsHighlighted ? " e-primary" : "")}")"></ChipItem>
-            </ChipItems>
-        </SfChip>
-        <SfChip @ref="_chip">
-            <ChipEvents OnClick="@OnClick"></ChipEvents>
-            <ChipItems>
-                @foreach (var tag in Item.ResourceTags.Select(rt => rt.Tag).OrderByDescending(t =>
-                t.WeightedExperience))
-                {
-                    <ChipItem Text="@tag.Title" CssClass="@(tag.IsHighlighted ? "e-primary" : "")">
+@if (Item is not null)
+{
+    <div class="e-list-wrapper e-list-multi-line e-list-avatar">
+        <span class="e-avatar e-avatar-circle">@(Item.ProviderId)</span>
+        <span class="e-list-item-header e-list-multi-line" style="word-wrap: break-word;">
+            @if (Item.Url.StartsWith("http"))
+            {
+                <a href="@Item.Url" target="_blank">@GetResourceHeader(Item)</a>
+            }
+            else
+            {
+                @GetResourceHeader(Item)
+            }
+        </span>
+        <span class="e-list-content" style="word-wrap: break-word;">
+            <SfChip>
+                <ChipItems>
+                    <ChipItem CssClass="e-outline" Text="@Item.Provider.Title"></ChipItem>
+                    <ChipItem CssClass="e-outline" Text="@($"{Item.Experience.ToString("N2")} xp")">
                     </ChipItem>
-                }
-            </ChipItems>
-        </SfChip>
-    </span>
-</div>
+                    <ChipItem CssClass="e-outline" Text="@GetLevelString(Item.Level)"></ChipItem>
+                    <ChipItem CssClass="e-outline" Text="@GetDurationString(Item.Duration)"></ChipItem>
+                    <ChipItem Text="@Item.Type.Title"
+                              CssClass="@($"e-outline{(Item.Type.IsHighlighted ? " e-primary" : "")}")"></ChipItem>
+                </ChipItems>
+            </SfChip>
+            <SfChip>
+                <ChipEvents OnClick="@OnClick"></ChipEvents>
+                <ChipItems>
+                    @foreach (var tag in Item.ResourceTags.Select(rt => rt.Tag).OrderByDescending(t =>
+                    t.WeightedExperience))
+                    {
+                        <ChipItem Text="@tag.Title" CssClass="@(tag.IsHighlighted ? "e-primary" : "")">
+                        </ChipItem>
+                    }
+                </ChipItems>
+            </SfChip>
+        </span>
+    </div>
+}
 
 @code {
 
-    [Parameter] public Resource Item { get; set; }
+    [Parameter] public Resource? Item { get; set; }
     [Parameter] public EventCallback<Resource> ItemChanged { get; set; }
     [Parameter] public EventCallback<SelectableBase> Update { get; set; }
 
-    private SfChip _chip;
-    
-    private IEnumerable<Tag> Tags => Item.ResourceTags.Select(rt => rt.Tag);
+    private IEnumerable<Tag>? Tags => Item?.ResourceTags?.Select(rt => rt.Tag);
 
     private string GetResourceHeader(Resource resource)
     {
@@ -86,8 +88,7 @@
 
     private async Task OnClick(ChipEventArgs args)
     {
-        
-        var tag = Item.ResourceTags.FirstOrDefault(t => t.Tag.Title == args.Text)?.Tag;
+        var tag = Item!.ResourceTags.FirstOrDefault(t => t.Tag.Title == args.Text)?.Tag;
 
         if (tag != null)
         {
