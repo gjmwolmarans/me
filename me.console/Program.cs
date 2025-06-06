@@ -34,7 +34,8 @@ static async Task RunPipeline(IServiceProvider hostProvider)
     var tags = excelFileService.GetTags();
     var resourceTags = excelFileService.GetResourceTags();
 
-    var data = new Data {
+    var data = new Data
+    {
         Providers = providers,
         Resources = resources,
         Tags = tags,
@@ -69,7 +70,8 @@ static async Task DownloadCompetencyMatrix(string path)
 
 static async Task ExportToJson<T>(T data, string path)
 {
-    string json = JsonSerializer.Serialize(data, new JsonSerializerOptions {
+    string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+    {
         WriteIndented = false,
         Converters =
         {
