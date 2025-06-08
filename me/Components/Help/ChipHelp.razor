@@ -1,7 +1,7 @@
 ﻿@using Syncfusion.Blazor.Buttons
 
 <FluentMessageBar Title="Most chips are toggleable" Intent="@MessageIntent.Success">
-    <SfChip Selection="SelectionType.Multiple">
+    <SfChip @ref="_chip" Selection="SelectionType.Multiple">
         <ChipEvents OnClick="@((e) => _isHelpChipSelected = e.Selected)"></ChipEvents>
         <ChipItems>
             <ChipItem Text="Toggle me" CssClass="@(_isHelpChipSelected ? "e-primary" : "")"></ChipItem>
@@ -10,5 +10,15 @@
 </FluentMessageBar>
 
 @code {
-    private bool _isHelpChipSelected { get; set; } = false;
+    public SfChip? _chip { get; set; }
+    private bool _isHelpChipSelected { get; set; } = true;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _chip?.SelectChips(new[] { "Toggle me" });
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
 }

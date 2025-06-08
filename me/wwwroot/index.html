@@ -16,7 +16,6 @@
             t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
             y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "jqilrq322j");
-        window.clarity('consent', false);
     </script>
     <link href="_content/Syncfusion.Blazor.Themes/fluent.css" rel="stylesheet" />
     <meta http-equiv='cache-control' content='no-cache'>
@@ -41,6 +40,26 @@
         <a class="dismiss">????</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent"
+        style="display:none; position:fixed; bottom:0; left:0; width:100%; background:#222; color:#fff; padding:16px; text-align:center; z-index:1000;">
+        This site uses cookies to enhance your experience.
+        <button onclick="acceptCookies()" style="margin-left:16px; padding:6px 16px;">Accept</button>
+    </div>
+    <script>
+        function acceptCookies() {
+            document.cookie = "cookiesAccepted=true; path=/; max-age=31536000";
+            document.getElementById('cookieConsent').style.display = 'none';
+            // Enable Clarity consent if needed
+            if (window.clarity) window.clarity('consent', true);
+        }
+        window.onload = function () {
+            if (!document.cookie.split('; ').find(row => row.startsWith('cookiesAccepted='))) {
+                document.getElementById('cookieConsent').style.display = 'block';
+            }
+        }
+    </script>
 </body>
 
 </html>
