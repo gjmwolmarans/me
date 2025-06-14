@@ -57,6 +57,9 @@
         window.onload = function () {
             if (!document.cookie.split('; ').find(row => row.startsWith('cookiesAccepted='))) {
                 document.getElementById('cookieConsent').style.display = 'block';
+            } else {
+                // If cookies are already accepted, enable Clarity tracking
+                if (window.clarity) window.clarity('consent', true);
             }
         }
     </script>
