@@ -1,7 +1,5 @@
 ﻿@using System.Collections.ObjectModel
 
-<PageTitle>gjmwolmarans.me | About Me</PageTitle>
-
 <FluentGrid Spacing="4">
     <FluentGridItem sm="12" md="12" lg="6">
         <FluentCard>
@@ -22,7 +20,7 @@
     string? WorkExperienceMarkdown { get; set; } = null;
 
     [Inject]
-    HttpClient Http { get; set; }
+    public required HttpClient Http { get; set; }
 
     protected async override Task OnInitializedAsync()
     {

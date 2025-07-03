@@ -11,7 +11,8 @@
     <SfChip @ref="_chip" Selection="SelectionType.Multiple">
         <ChipEvents OnClick="@OnClick"></ChipEvents>
         <ChipItems>
-            @foreach (var resourceType in Items.OrderByDescending(rt => rt.Resources.SelectMany(r => r.ResourceTags).Sum(rt => rt.WeightedExperience)))
+            @foreach (var resourceType in Items.OrderByDescending(rt => rt.Resources.SelectMany(r => r.ResourceTags).Sum(rt
+                    => rt.WeightedExperience)))
             {
                 <ChipItem Text="@resourceType.Title" CssClass="@(resourceType.IsHighlighted ? "e-primary" : "")"></ChipItem>
             }

@@ -3,27 +3,27 @@
 
 <PageTitle>gjmwolmarans.me | Competency Matrix</PageTitle>
 
-<FluentLabel Typo="Typography.HeroTitle">Competency Matrix</FluentLabel>
+<FluentLabel id="competency-matrix" Typo="Typography.HeroTitle">Competency Matrix</FluentLabel>
 
-<ExcelGraph/>
+<ExcelGraph />
 
 <FluentGrid>
     <FluentGridItem sm="12" md="12" lg="12">
-        <SfSpinner @bind-Visible="@_isLoading"/>
+        <SfSpinner @bind-Visible="@_isLoading" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="6" lg="3">
-        <XPCounter TotalXP="@TotalXP"/>
+        <XPCounter TotalXP="@TotalXP" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="6" lg="3">
-        <FluentStack Orientation="Orientation.Vertical">
-            <ChipHelp/>
-            <FluentSpacer/>
+        <FluentStack Orientation="Orientation.Vertical" id="chip-help">
+            <ChipHelp />
+            <FluentSpacer />
             <a href="https://bit.ly/gjmwolmarans-CM-xlsx" download target="_blank"
-               style="width: 100%; text-decoration: none;">
+                style="width: 100%; text-decoration: none;">
                 <SfCard>
                     <CardContent>
                         <FluentStack Orientation="Orientation.Horizontal">
-                            <FluentIcon Value="@(new Icons.Regular.Size48.DocumentRibbon())" Color="@Color.Success"/>
+                            <FluentIcon Value="@(new Icons.Regular.Size48.DocumentRibbon())" Color="@Color.Success" />
                             <FluentStack Orientation="Orientation.Vertical">
                                 <FluentLabel Typo="Typography.H5">CompetencyMatrix.xlsx</FluentLabel>
                                 <FluentLabel Typo="Typography.Subject">Download</FluentLabel>
@@ -36,18 +36,18 @@
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="6">
         <RoleList @ref="_roleList" Items="@Data.Roles"
-                  ItemsChanged="(items) => {Data.Roles = items; SetQueryState();}"/>
+            ItemsChanged="(items) => {Data.Roles = items; SetQueryState();}" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
-        <TagList @ref="_tagList" Items="@Data.Tags" ItemsChanged="(items) => {Data.Tags = items; SetQueryState();}"
-                 @bind-IsLoading="@_isLoading"/>
+        <TagList @ref="_tagList" Items="@Data.Tags" ItemsChanged="(items) => { Data.Tags = items; SetQueryState(); }"
+            @bind-IsLoading="@_isLoading" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
         <ResourceTypeList @ref="_resourceTypeList" Items="@Data.ResourceTypes"
-                          ItemsChanged="(items) => {Data.ResourceTypes = items; SetQueryState();}"/>
+            ItemsChanged="(items) => {Data.ResourceTypes = items; SetQueryState();}" />
     </FluentGridItem>
     <FluentGridItem sm="12" md="12" lg="12">
-        <ResourceList Items="@(FilteredResources.OrderByDescending(r => r.Id))" Toggle=@ToggleItem/>
+        <ResourceList Items="@(FilteredResources.OrderByDescending(r => r.Id))" Toggle=@ToggleItem />
     </FluentGridItem>
 </FluentGrid>
 
@@ -79,23 +79,23 @@
             var selectedResourceTypes = Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title);
             var highlightedTags = Data.Tags.Where(t => t.IsHighlighted);
             return highlightedTags.Any() || selectedResourceTypes.Any()
-                ? FilteredResources
-                    .SelectMany(r => r.ResourceTags)
-                    .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
-                                 || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
-                    .Sum(t => t.WeightedExperience)
-                : _totalXP;
+            ? FilteredResources
+            .SelectMany(r => r.ResourceTags)
+            .Where(rt => (!highlightedTags.Any() || highlightedTags.Contains(rt.Tag))
+            || (!selectedResourceTypes.Any() || selectedResourceTypes.Contains(rt.Resource.TypeId)))
+            .Sum(t => t.WeightedExperience)
+            : _totalXP;
         }
     }
 
     IDictionary<string, string[]> GetQueryState()
     {
         return new Dictionary<string, string[]>()
-        {
-            { "roles", Data.Roles.Where(r => r.IsSelected).Select(r => r.Title).ToArray() },
-            { "tags", Data.Tags.Where(t => t.IsSelected).Select(t => t.Title).ToArray() },
-            { "resourceTypes", Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title).ToArray() }
-        };
+{
+{ "roles", Data.Roles.Where(r => r.IsSelected).Select(r => r.Title).ToArray() },
+{ "tags", Data.Tags.Where(t => t.IsSelected).Select(t => t.Title).ToArray() },
+{ "resourceTypes", Data.ResourceTypes.Where(rt => rt.IsSelected).Select(rt => rt.Title).ToArray() }
+};
     }
 
     void SetQueryState()
@@ -126,9 +126,11 @@
             queryState.Add(key, qb[key].ToArray()!);
         }
 
-        Data.Roles.ToList().ForEach(r => r.IsSelected = queryState.ContainsKey("roles") && queryState["roles"].Contains(r.Title));
+        Data.Roles.ToList().ForEach(r => r.IsSelected = queryState.ContainsKey("roles") &&
+        queryState["roles"].Contains(r.Title));
         Data.Tags.ToList().ForEach(t => t.IsSelected = queryState.ContainsKey("tags") && queryState["tags"].Contains(t.Title));
-        Data.ResourceTypes.ToList().ForEach(rt => rt.IsSelected = queryState.ContainsKey("resourceTypes") && queryState["resourceTypes"].Contains(rt.Title));
+        Data.ResourceTypes.ToList().ForEach(rt => rt.IsSelected = queryState.ContainsKey("resourceTypes") &&
+        queryState["resourceTypes"].Contains(rt.Title));
 
         StateHasChanged();
 
@@ -149,9 +151,9 @@
             var anyTags = Data.Tags.Any(t => t.IsHighlighted);
             var anyResourceTypes = Data.ResourceTypes.Any(rt => rt.IsSelected);
             return anyTags || anyResourceTypes
-                ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
-                                            && (!anyResourceTypes || r.Type.IsHighlighted))
-                : Data.Resources;
+            ? Data.Resources.Where(r => (!anyTags || r.ResourceTags.Select(r => r.Tag).Any(t => t.IsHighlighted))
+            && (!anyResourceTypes || r.Type.IsHighlighted))
+            : Data.Resources;
         }
     }
 

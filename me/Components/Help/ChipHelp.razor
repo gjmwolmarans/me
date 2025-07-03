@@ -2,9 +2,16 @@
 
 <FluentMessageBar Title="Most chips are toggleable" Intent="@MessageIntent.Success">
     <SfChip @ref="_chip" Selection="SelectionType.Multiple">
-        <ChipEvents OnClick="@((e) => _isHelpChipSelected = e.Selected)"></ChipEvents>
+        <ChipEvents OnClick="@((e) => { if (e.Text == "Toggle me") { _isHelpChipSelected = e.Selected; } })">
+        </ChipEvents>
         <ChipItems>
             <ChipItem Text="Toggle me" CssClass="@(_isHelpChipSelected ? "e-primary" : "")"></ChipItem>
+            <ChipItem Text="Filtered" CssClass="e-primary"></ChipItem>
+        </ChipItems>
+    </SfChip>
+    <SfChip>
+        <ChipItems>
+            <ChipItem Text="Not Toggleable" CssClass="e-outline"></ChipItem>
         </ChipItems>
     </SfChip>
 </FluentMessageBar>

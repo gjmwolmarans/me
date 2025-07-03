@@ -3,7 +3,7 @@
 
 @if (Items.Any())
 {
-    <h3>Tags</h3>
+    <h3 id="tags">Tags</h3>
     foreach (var (key, group) in GroupedItems)
     {
         <TagTypeGroup @ref="ChildRef" Items="@group" ItemsChanged="@((items) => {
