@@ -1,8 +1,32 @@
-<div style="width: 95vw; height: auto; overflow-y: hidden;">
-    <iframe width="100%" height="680" frameborder="0" scrolling="no"
-            src="https://onedrive.live.com/embed?resid=F9480B74B852B3B7%21251307&authkey=%21ALWOWl3ShAlVT70&em=2&wdAllowInteractivity=False&Item=ClusterExperience&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edesNext=false&resen=false&ed1JS=false"></iframe>
-</div>
+@using Syncfusion.Blazor.Charts
+@using me.Models
+
+<SfChart>
+    <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" LabelRotation="90"></ChartPrimaryXAxis>
+
+    <ChartSeriesCollection>
+        <ChartSeries DataSource="@ChartData" Name="Skill" XName="Role" YName="Skill" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+        <ChartSeries DataSource="@ChartData" Name="Language" XName="Role" YName="Language" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+        <ChartSeries DataSource="@ChartData" Name="Framework" XName="Role" YName="Framework" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+        <ChartSeries DataSource="@ChartData" Name="Platform" XName="Role" YName="Platform" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+        <ChartSeries DataSource="@ChartData" Name="Tool" XName="Role" YName="Tool" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+        <ChartSeries DataSource="@ChartData" Name="API" XName="Role" YName="Api" Type="Syncfusion.Blazor.Charts.ChartSeriesType.StackingColumn" />
+    </ChartSeriesCollection>
+
+    <ChartLegendSettings Visible="true" />
+</SfChart>
 
 @code {
-    
+
+    [Parameter] public Data Data { get; set; }
+    [Parameter] public EventCallback<Data> DataChanged { get; set; }
+
+    private List<Chart3DData> ChartData => (Data.Roles.Any(role => role.IsHighlighted) ? Data.Roles.Where(role => role.IsHighlighted) : Data.Roles)
+        .Select(role => new Chart3DData
+        {
+            Role = role.Title,
+            Tags = role.Tags
+        })
+        .OrderByDescending(cd => cd.WeightedExperience)
+        .ToList();
 }
