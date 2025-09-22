@@ -1,0 +1,170 @@
+@*
+    Skills Analysis Page
+    
+    Provides a comprehensive view of professional skills and learning resources
+    using Syncfusion Pivot Table for advanced data analysis and insights.
+    
+    Features:
+    - Full-screen pivot table for detailed analysis
+    - Summary statistics and key metrics
+    - Data refresh capabilities
+    - Responsive design for all devices
+*@
+
+@page "/pivot-analysis"
+@using me.Components.Graph
+@using me.Models
+@inject IExcelFileService ExcelFileService
+@inject NavigationManager NavigationManager
+
+<PageTitle>gjmwolmarans.me | Skills Analysis</PageTitle>
+
+<FluentLabel id="pivot-analysis" Typo="Typography.HeroTitle">Skills Analysis</FluentLabel>
+
+<FluentGrid>
+    <FluentGridItem sm="12">
+        <SfSpinner Visible="@_isLoading" />
+    </FluentGridItem>
+
+    @if (!_isLoading && Data.ResourceTags.Any())
+    {
+        <FluentGridItem sm="12">
+            <FluentCard style="margin-bottom: 20px; padding: 20px;">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="10">
+                    <FluentButton Appearance="Appearance.Accent" OnClick="RefreshData">
+                        <FluentIcon Value="@(new Icons.Regular.Size16.ArrowClockwise())" />
+                        Refresh Data
+                    </FluentButton>
+                    <FluentButton Appearance="Appearance.Neutral" OnClick="NavigateToCompetencyMatrix">
+                        <FluentIcon Value="@(new Icons.Regular.Size16.ChartMultiple())" />
+                        View Chart
+                    </FluentButton>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <FluentGridItem sm="12">
+            <FluentCard>
+                <me.Components.Graph.PivotTable @bind-Data="Data" />
+            </FluentCard>
+        </FluentGridItem>
+
+        <FluentGridItem sm="12">
+            <FluentCard style="margin-top: 20px; padding: 20px;">
+                <FluentLabel Typo="Typography.Subject" style="margin-bottom: 15px;">Data Insights</FluentLabel>
+                <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+                    <FluentLabel>
+                        <strong>Total Skills:</strong> @Summary.TotalSkills tags across @Summary.TotalCategories categories
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Learning Resources:</strong> @Summary.TotalResources resources from @Summary.TotalProviders providers
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Total Experience Points:</strong> @($"{Summary.TotalWeightedExperience:N0}") weighted experience points
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Professional Roles:</strong> @Summary.TotalRoles roles represented
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Average Resource Level:</strong> @($"{Summary.AverageResourceLevel:F1}") out of 5
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Total Learning Time:</strong> @($"{Summary.TotalDuration.TotalHours:N0}") hours
+                    </FluentLabel>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+        
+        <FluentGridItem sm="12">
+            <FluentCard style="margin-top: 20px; padding: 20px;">
+                <FluentLabel Typo="Typography.Subject" style="margin-bottom: 15px;">How to Use the Pivot Table</FluentLabel>
+                <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
+                    <FluentLabel>
+                        <strong>Field List:</strong> Use the field list button to drag and drop fields between Rows, Columns, Values, and Filters
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Grouping Bar:</strong> The grouping bar above the table allows quick field rearrangement
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Drill Down:</strong> Click on row headers to expand/collapse hierarchical data
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Sorting:</strong> Click on column headers to sort data in ascending or descending order
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Filtering:</strong> Use filter fields to focus on specific roles or skill levels
+                    </FluentLabel>
+                    <FluentLabel>
+                        <strong>Export:</strong> Use the toolbar options to export data in various formats
+                    </FluentLabel>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+    }
+    else if (!_isLoading)
+    {
+        <FluentGridItem sm="12">
+            <FluentCard>
+                <FluentMessageBar Intent="MessageIntent.Info">
+                    No data available for analysis. Please check the data source.
+                </FluentMessageBar>
+            </FluentCard>
+        </FluentGridItem>
+    }
+</FluentGrid>
+
+@code {
+    private Data Data { get; set; } = new();
+    private bool _isLoading = true;
+    
+    /// <summary>
+    /// Summary statistics calculated from the pivot data
+    /// </summary>
+    private PivotSummary Summary => Data?.GetPivotSummary() ?? new PivotSummary();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadData();
+    }
+
+    /// <summary>
+    /// Loads data from the Excel file service and updates the UI
+    /// </summary>
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            Data = await ExcelFileService.LoadData();
+        }
+        catch (Exception ex)
+        {
+            // Log error or show user-friendly message
+            Console.WriteLine($"Error loading data: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Refreshes the data by reloading from the service
+    /// </summary>
+    private async Task RefreshData()
+    {
+        await LoadData();
+    }
+    
+    /// <summary>
+    /// Navigates back to the main competency matrix page
+    /// </summary>
+    private void NavigateToCompetencyMatrix()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
