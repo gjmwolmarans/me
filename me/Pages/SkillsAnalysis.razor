@@ -60,16 +60,16 @@
                         <strong>Learning Resources:</strong> @Summary.TotalResources resources from @Summary.TotalProviders providers
                     </FluentLabel>
                     <FluentLabel>
-                        <strong>Total Experience Points:</strong> @($"{Summary.TotalWeightedExperience:N0}") weighted experience points
+                        <strong>Total Experience Points:</strong> @($"{Summary.TotalWeightedExperience:F2}") weighted experience points
                     </FluentLabel>
                     <FluentLabel>
                         <strong>Professional Roles:</strong> @Summary.TotalRoles roles represented
                     </FluentLabel>
                     <FluentLabel>
-                        <strong>Average Resource Level:</strong> @($"{Summary.AverageResourceLevel:F1}") out of 5
+                        <strong>Average Resource Level:</strong> @($"{Summary.AverageResourceLevel:F2}") out of 5
                     </FluentLabel>
                     <FluentLabel>
-                        <strong>Total Learning Time:</strong> @($"{Summary.TotalDuration.TotalHours:N0}") hours
+                        <strong>Total Learning Time:</strong> @($"{Summary.TotalDuration.TotalHours:F2}") hours
                     </FluentLabel>
                 </FluentStack>
             </FluentCard>
