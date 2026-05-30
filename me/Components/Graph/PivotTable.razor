@@ -1,0 +1,120 @@
+@*
+    Syncfusion Pivot Table Component for Skills Analysis
+    
+    This component provides advanced data analysis capabilities for professional skills and learning resources.
+    It transforms relational data into a pivot table format for dynamic grouping, filtering, and aggregation.
+    
+    Features:
+    - Interactive field list and grouping bar
+    - Hierarchical skill categorization
+    - Cross-tabulation by resource types and providers
+    - Weighted experience calculations
+    - Role-based filtering
+    - Export capabilities
+    - Responsive design
+*@
+
+@using Syncfusion.Blazor.PivotView
+@using me.Models
+@using me.shared
+
+<div class="pivot-container">
+    <SfPivotView TValue="PivotData" Width="100%" Height="600px" ShowFieldList="true" ShowGroupingBar="true">
+        <PivotViewDataSourceSettings DataSource="@PivotDataSource" ExpandAll="false">
+            
+            @* Columns: Cross-tabulation by resource organization *@
+            <PivotViewColumns>
+                <PivotViewColumn Name="ResourceType" Caption="Resource Type"></PivotViewColumn>
+                <PivotViewColumn Name="Provider" Caption="Provider"></PivotViewColumn>
+            </PivotViewColumns>
+            
+            @* Rows: Hierarchical skill categorization *@
+            <PivotViewRows>
+                <PivotViewRow Name="TagType" Caption="Category"></PivotViewRow>
+                <PivotViewRow Name="TagTitle" Caption="Tag"></PivotViewRow>
+            </PivotViewRows>
+            
+            @* Values: Experience metrics and aggregations *@
+            <PivotViewValues>
+                <PivotViewValue Name="WeightedExperience" Caption="Weighted Experience" Type="@SummaryTypes.Sum" Format="N2"></PivotViewValue>
+                <PivotViewValue Name="ResourceCount" Caption="Resource Count" Type="@SummaryTypes.Count"></PivotViewValue>
+                <PivotViewValue Name="Experience" Caption="Total Experience" Type="@SummaryTypes.Sum" Format="N2"></PivotViewValue>
+            </PivotViewValues>
+            
+            @* Filters: Interactive filtering options *@
+            <PivotViewFilters>
+                <PivotViewFilter Name="RoleTitle" Caption="Role"></PivotViewFilter>
+                <PivotViewFilter Name="ResourceLevel" Caption="Level"></PivotViewFilter>
+            </PivotViewFilters>
+            
+        </PivotViewDataSourceSettings>
+        
+        @* Grid configuration for optimal display *@
+        <PivotViewGridSettings ColumnWidth="120"></PivotViewGridSettings>
+        
+        @* Display both grid and chart views *@
+        <PivotViewDisplayOption View="View.Both"></PivotViewDisplayOption>
+        
+    </SfPivotView>
+</div>
+
+@code {
+    /// <summary>
+    /// Data source containing all professional skills and learning resources
+    /// </summary>
+    [Parameter] public Data Data { get; set; } = new();
+    
+    /// <summary>
+    /// Event callback for data changes to support two-way binding
+    /// </summary>
+    [Parameter] public EventCallback<Data> DataChanged { get; set; }
+
+    /// <summary>
+    /// Transforms the relational data structure into a flat pivot data source
+    /// suitable for Syncfusion PivotView analysis
+    /// </summary>
+    private List<PivotData> PivotDataSource => Data?.ToPivotData()?.ToList() ?? new List<PivotData>();
+}
+
+<style>
+    /* Pivot table container styling */
+    .pivot-container {
+        width: 100%;
+        margin: 1rem 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Grid row text styling for better readability */
+    .e-pivotview .e-grid .e-row {
+        font-size: 12px;
+    }
+    
+    /* Field list z-index to ensure proper overlay */
+    .e-pivotview .e-pivotfieldlist {
+        z-index: 1000;
+    }
+    
+    /* Responsive adjustments for mobile devices */
+    @@media (max-width: 768px) {
+        .pivot-container {
+            margin: 0.5rem 0;
+        }
+        
+        .e-pivotview .e-grid .e-row {
+            font-size: 11px;
+        }
+    }
+    
+    /* Header styling for better visual hierarchy */
+    .e-pivotview .e-grid .e-columnheader {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    
+    /* Value cells styling for emphasis */
+    .e-pivotview .e-grid .e-valuescontent {
+        font-weight: 500;
+    }
+</style>

@@ -5,7 +5,14 @@
 
 <FluentLabel id="competency-matrix" Typo="Typography.HeroTitle">Competency Matrix</FluentLabel>
 
-<ExcelGraph @bind-Data="Data" />
+<FluentTabs>
+    <FluentTab Text="Chart View">
+        <ExcelGraph @bind-Data="Data" />
+    </FluentTab>
+    <FluentTab Text="Pivot Analysis">
+        <me.Components.Graph.PivotTable @bind-Data="Data" />
+    </FluentTab>
+</FluentTabs>
 
 <FluentGrid>
     <FluentGridItem sm="12" md="12" lg="12">
@@ -17,6 +24,11 @@
     <FluentGridItem sm="12" md="6" lg="3">
         <FluentStack Orientation="Orientation.Vertical" id="chip-help">
             <ChipHelp />
+            <FluentSpacer />
+            <FluentButton Appearance="Appearance.Accent" Style="width: 100%;" OnClick="NavigateToPivotAnalysis">
+                <FluentIcon Value="@(new Icons.Regular.Size16.DataBarVertical())" />
+                Open Skills Analysis
+            </FluentButton>
             @* TODO: OneDrive links aren't working at the moment. find a permanent solution to make the latest file available for download *@
             @* <FluentSpacer />
             <a href="https://bit.ly/gjmwolmarans-CM-xlsx" download target="_blank"
@@ -181,6 +193,14 @@
         SetQueryState();
         ResetSelection();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Navigates to the dedicated Skills Analysis page with full-screen pivot table
+    /// </summary>
+    private void NavigateToPivotAnalysis()
+    {
+        NavigationManager.NavigateTo("/pivot-analysis");
     }
 
 }
